@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { X, UserPlus, Trash2, Shield, Users } from "lucide-react";
 
-export function CompanionsModal({ companions, onUpdateCompanions, isOpen, onClose }) {
+export function CompanionsModal({ companions, onUpdateCompanions, isOpen, onClose, lang = "he" }) {
   if (!isOpen) return null;
 
+  const isHe = lang === "he";
   const [name, setName] = useState("");
-  const [role, setRole] = useState("Travel Companion");
+  const [role, setRole] = useState(isHe ? "שותף לטיול" : "Travel Companion");
   const [color, setColor] = useState("bg-blue-600");
 
   const colors = [
@@ -32,19 +33,19 @@ export function CompanionsModal({ companions, onUpdateCompanions, isOpen, onClos
     const newCompanion = {
       id: "c-" + Date.now(),
       name: name.trim(),
-      role: role.trim() || "Traveler",
+      role: role.trim() || (isHe ? "שותף" : "Traveler"),
       avatar: initials || "TR",
       color
     };
 
     onUpdateCompanions([...companions, newCompanion]);
     setName("");
-    setRole("Travel Companion");
+    setRole(isHe ? "שותף לטיול" : "Travel Companion");
   };
 
   const handleRemove = (id) => {
     if (companions.length <= 1) {
-      alert("At least one companion/traveler should remain.");
+      alert(isHe ? "חייב להישאר לפחות שותף/מארגן אחד בטיול." : "At least one companion/traveler should remain.");
       return;
     }
     onUpdateCompanions(companions.filter((c) => c.id !== id));
@@ -52,7 +53,10 @@ export function CompanionsModal({ companions, onUpdateCompanions, isOpen, onClos
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fade-in no-print">
-      <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden">
+      <div
+        className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden"
+        dir={isHe ? "rtl" : "ltr"}
+      >
         {/* Header */}
         <div className="p-6 bg-gradient-to-r from-blue-700 to-indigo-800 text-white flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -60,13 +64,17 @@ export function CompanionsModal({ companions, onUpdateCompanions, isOpen, onClos
               <Users className="w-5 h-5 text-blue-200" />
             </div>
             <div>
-              <h3 className="text-lg font-bold">Travel Companions</h3>
-              <p className="text-blue-100 text-xs">{companions.length} members on this journey</p>
+              <h3 className="text-lg font-bold">
+                {isHe ? "שותפים לקבוצת הטיול" : "Travel Companions"}
+              </h3>
+              <p className="text-blue-100 text-xs">
+                {isHe ? `${companions.length} חברים בקבוצה` : `${companions.length} members on this journey`}
+              </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-white/80 hover:text-white rounded-full bg-black/10 hover:bg-black/20 transition-colors"
+            className="p-1.5 text-white/80 hover:text-white rounded-full bg-black/10 hover:bg-black/20 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -95,8 +103,8 @@ export function CompanionsModal({ companions, onUpdateCompanions, isOpen, onClos
                 {companions.length > 1 && (
                   <button
                     onClick={() => handleRemove(comp.id)}
-                    className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors"
-                    title="Remove companion"
+                    className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors cursor-pointer"
+                    title={isHe ? "הסר שותף" : "Remove companion"}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -108,14 +116,14 @@ export function CompanionsModal({ companions, onUpdateCompanions, isOpen, onClos
           {/* Add form */}
           <form onSubmit={handleAdd} className="pt-4 border-t border-slate-100 space-y-3">
             <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-              Add New Companion
+              {isHe ? "הוסף שותף חדש" : "Add New Companion"}
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <input
                   type="text"
                   required
-                  placeholder="Full name"
+                  placeholder={isHe ? "שם מלא" : "Full name"}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -124,7 +132,7 @@ export function CompanionsModal({ companions, onUpdateCompanions, isOpen, onClos
               <div>
                 <input
                   type="text"
-                  placeholder="Role (e.g. Foodie)"
+                  placeholder={isHe ? "תפקיד (למשל: נהג, צלם)" : "Role (e.g. Foodie)"}
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
                   className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -139,7 +147,7 @@ export function CompanionsModal({ companions, onUpdateCompanions, isOpen, onClos
                     type="button"
                     key={c.class}
                     onClick={() => setColor(c.class)}
-                    className={`w-6 h-6 rounded-full ${c.class} transition-all ${
+                    className={`w-6 h-6 rounded-full ${c.class} transition-all cursor-pointer ${
                       color === c.class ? "ring-2 ring-offset-2 ring-slate-800 scale-110" : "opacity-80 hover:opacity-100"
                     }`}
                   />
@@ -151,7 +159,7 @@ export function CompanionsModal({ companions, onUpdateCompanions, isOpen, onClos
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl flex items-center gap-1.5 shadow-sm transition-colors cursor-pointer"
               >
                 <UserPlus className="w-3.5 h-3.5" />
-                Add Member
+                <span>{isHe ? "הוסף חבר" : "Add Member"}</span>
               </button>
             </div>
           </form>
@@ -160,9 +168,9 @@ export function CompanionsModal({ companions, onUpdateCompanions, isOpen, onClos
         <div className="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-medium text-xs rounded-xl transition-colors"
+            className="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-medium text-xs rounded-xl transition-colors cursor-pointer"
           >
-            Done
+            {isHe ? "סיום" : "Done"}
           </button>
         </div>
       </div>
