@@ -669,6 +669,7 @@ export default function App() {
             <TipsAndPackingView
               trip={currentTrip}
               packingList={currentTrip?.packingChecklist || []}
+              lang={lang}
               onTogglePackingItem={handleTogglePackingItem}
               onAddPackingItem={handleAddPackingItem}
               onDeletePackingItem={handleDeletePackingItem}
@@ -680,6 +681,7 @@ export default function App() {
               trip={currentTrip}
               places={currentTrip?.places || []}
               itinerary={currentTrip?.itinerary || []}
+              lang={lang}
             />
           )}
         </main>
@@ -697,14 +699,14 @@ export default function App() {
             <div className="flex items-center gap-4 text-slate-400">
               <button
                 onClick={handleStartBlankTrip}
-                className="hover:text-slate-800 transition-colors font-semibold"
+                className="hover:text-slate-800 transition-colors font-semibold cursor-pointer"
               >
                 {isHe ? "✨ התחל טיול נקי מאפס" : "Start Blank Trip"}
               </button>
               <span>·</span>
               <button
                 onClick={() => setIsExportModalOpen(true)}
-                className="hover:text-slate-800 transition-colors"
+                className="hover:text-slate-800 transition-colors cursor-pointer"
               >
                 {isHe ? "ייצוא / גיבוי" : "Export / Backup"}
               </button>
@@ -717,6 +719,7 @@ export default function App() {
       <DestinationModal
         trips={trips}
         activeTripId={activeTripId}
+        lang={lang}
         onSelectTrip={(id) => {
           setActiveTripId(id);
           showToast({
@@ -740,12 +743,14 @@ export default function App() {
 
       <WeatherModal
         trip={currentTrip}
+        lang={lang}
         isOpen={isWeatherModalOpen}
         onClose={() => setIsWeatherModalOpen(false)}
       />
 
       <CurrencyModal
         trip={currentTrip}
+        lang={lang}
         isOpen={isCurrencyModalOpen}
         onClose={() => setIsCurrencyModalOpen(false)}
       />
@@ -753,6 +758,7 @@ export default function App() {
       <CompanionsModal
         companions={currentTrip?.companions || []}
         onUpdateCompanions={handleUpdateCompanions}
+        lang={lang}
         isOpen={isCompanionsModalOpen}
         onClose={() => setIsCompanionsModalOpen(false)}
       />
@@ -763,12 +769,14 @@ export default function App() {
         onSavePlace={handleSavePlace}
         placeToEdit={placeToEdit}
         currencySymbol={currentTrip?.currencySymbol || "€"}
+        lang={lang}
       />
 
       <AddToItineraryModal
         place={placeToSchedule}
         trip={currentTrip}
         isOpen={!!placeToSchedule}
+        lang={lang}
         onClose={() => setPlaceToSchedule(null)}
         onSchedule={(newAct) => {
           updateCurrentTrip((prev) => ({
@@ -791,6 +799,7 @@ export default function App() {
         activityToEdit={activityToEdit}
         trip={currentTrip}
         places={currentTrip?.places || []}
+        lang={lang}
       />
 
       <ExportShareModal
