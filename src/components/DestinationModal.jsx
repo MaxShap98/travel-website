@@ -9,10 +9,12 @@ export function DestinationModal({
   onUpdateTrip,
   onDeleteTrip,
   isOpen,
-  onClose
+  onClose,
+  lang = "he"
 }) {
   if (!isOpen) return null;
 
+  const isHe = lang === "he";
   const [isCreating, setIsCreating] = useState(false);
   const [editingTripId, setEditingTripId] = useState(null);
 
@@ -31,7 +33,7 @@ export function DestinationModal({
     setDestination("");
     setSubtitle("");
     setFlag("🌴");
-    setDateRange("Sep 15 – Sep 22, 2026");
+    setDateRange(isHe ? "15-22 באוקטובר 2026" : "Oct 15 – Oct 22, 2026");
     setBaseCurrency("EUR");
     setCurrencySymbol("€");
     setDurationDays(7);
@@ -45,12 +47,12 @@ export function DestinationModal({
 
     const newTrip = {
       id: "trip-" + Date.now(),
-      title: title.trim() || `${destination} Trip`,
+      title: title.trim() || (isHe ? `טיול ל${destination}` : `${destination} Trip`),
       destination: `${destination} ${flag}`,
-      subtitle: subtitle.trim() || "Vacation & Exploration",
+      subtitle: subtitle.trim() || (isHe ? "חופשה ובילויים" : "Vacation & Exploration"),
       country: destination.trim(),
       flag: flag || "✈️",
-      dateRange: dateRange.trim() || "Upcoming Trip",
+      dateRange: dateRange.trim() || (isHe ? "תאריכים קרובים" : "Upcoming Trip"),
       startDate: new Date().toISOString().split("T")[0],
       durationDays: parseInt(durationDays) || 7,
       baseCurrency: baseCurrency || "USD",
@@ -59,61 +61,48 @@ export function DestinationModal({
       weather: {
         temp: "22°C",
         tempF: "72°F",
-        condition: "Partly Cloudy",
+        condition: isHe ? "שמשי ונעים" : "Sunny & Warm",
         humidity: "55%",
         wind: "12 km/h",
         uvIndex: 5,
         forecast: [
-          { day: "Day 1", temp: "22°C", condition: "Sunny" },
-          { day: "Day 2", temp: "23°C", condition: "Clear" },
-          { day: "Day 3", temp: "21°C", condition: "Breezy" }
+          { day: isHe ? "יום 1" : "Day 1", temp: "22°C", condition: isHe ? "שמשי" : "Sunny" },
+          { day: isHe ? "יום 2" : "Day 2", temp: "23°C", condition: isHe ? "בהיר" : "Clear" },
+          { day: isHe ? "יום 3" : "Day 3", temp: "21°C", condition: isHe ? "בריזה נעימה" : "Breezy" }
         ]
       },
       companions: [
-        { id: "c-1", name: "Me (Organizer)", role: "Lead Planner", avatar: "ME", color: "bg-blue-600" }
+        { id: "c-1", name: isHe ? "אני (מארגן)" : "Me (Organizer)", role: isHe ? "מתכנן ראשי" : "Lead Planner", avatar: "ME", color: "bg-blue-600" }
       ],
       categories: [
-        { id: "hotels", name: "Hotels & Stays", icon: "Hotel", count: 0 },
-        { id: "dining", name: "Restaurants & Dining", icon: "Utensils", count: 0 },
-        { id: "nightlife", name: "Bars & Nightlife", icon: "Wine", count: 0 },
-        { id: "events", name: "Parties & Events", icon: "PartyPopper", count: 0 },
-        { id: "attractions", name: "Attractions & Leisure", icon: "Landmark", count: 0 },
-        { id: "tips", name: "General Tips & Packing", icon: "Compass", count: 0 }
+        { id: "hotels", name: isHe ? "מלונות ולינה" : "Hotels & Stays", icon: "Hotel", count: 0 },
+        { id: "dining", name: isHe ? "מסעדות ואוכל" : "Restaurants & Dining", icon: "Utensils", count: 0 },
+        { id: "nightlife", name: isHe ? "ברים וחיי לילה" : "Bars & Nightlife", icon: "Wine", count: 0 },
+        { id: "events", name: isHe ? "מסיבות ואירועים" : "Parties & Events", icon: "PartyPopper", count: 0 },
+        { id: "attractions", name: isHe ? "אטרקציות ובילוי" : "Attractions & Leisure", icon: "Landmark", count: 0 }
+      ],
+      packingChecklist: [
+        { id: "p1", item: isHe ? "דרכון בתוקף וביטוח נסיעות" : "Passport & travel insurance", category: isHe ? "מסמכים" : "Documents", completed: false },
+        { id: "p2", item: isHe ? "מתאם חשמל בינלאומי ומטען" : "Universal plug adapter & charger", category: isHe ? "אלקטרוניקה" : "Electronics", completed: false },
+        { id: "p3", item: isHe ? "כרטיסי אשראי בינלאומיים ומזומן" : "Credit cards & local cash", category: isHe ? "פיננסים" : "Finance", completed: false }
       ],
       places: [],
-      packingChecklist: [
-        { id: "pk-new-1", category: "Documents", item: "Passports and IDs", completed: false },
-        { id: "pk-new-2", category: "Tech", item: "Universal travel adapter and chargers", completed: false },
-        { id: "pk-new-3", category: "Clothing", item: "Weather-appropriate outfits and walking shoes", completed: false }
-      ],
+      itinerary: [],
+      budget: {
+        totalBudget: 2000,
+        currencySymbol: currencySymbol || "€"
+      },
       tips: {
         emergencyContacts: [
-          { name: "Emergency Police/Ambulance", number: "112 / 911", desc: "Local emergency helpline" }
+          { name: isHe ? "מוקד חירום בינלאומי" : "International Emergency", number: "112", desc: isHe ? "משטרה / אמבולנס" : "Police / Ambulance" }
         ],
         transitInfo: [
-          { title: "Airport Transfers", desc: "Check official taxi ranks or airport express trains." }
+          { title: isHe ? "תחבורה מקומית" : "Transit", desc: isHe ? "מומלץ לבדוק אפליקציות מוניות או תחבורה ציבורית מראש" : "Check transit apps" }
         ],
         currencyAdvice: [
-          { title: "Currency & Cards", desc: "No foreign transaction fee cards are strongly recommended." }
+          { title: isHe ? "תשלום בכרטיס" : "Card Payment", desc: isHe ? "מומלץ לבחור תמיד חיוב במטבע המקומי למניעת עמלות כפולות" : "Pay in local currency" }
         ]
-      },
-      itinerary: [
-        {
-          id: "itin-new-1",
-          dayNumber: 1,
-          dayLabel: "Day 1",
-          period: "Morning",
-          time: "10:00 AM",
-          activity: "Arrival & Hotel Check-in",
-          category: "hotels",
-          linkedPlaceId: null,
-          location: "Destination Center",
-          cost: 0,
-          bookingStatus: "Need to Book",
-          notes: "Unpack and get oriented with the city.",
-          completed: false
-        }
-      ]
+      }
     };
 
     onCreateTrip(newTrip);
@@ -122,18 +111,23 @@ export function DestinationModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fade-in no-print">
-      <div className="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col">
+      <div
+        className="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col"
+        dir={isHe ? "rtl" : "ltr"}
+      >
         {/* Header */}
         <div className="p-6 bg-gradient-to-r from-sky-900 to-indigo-900 text-white flex items-center justify-between shrink-0">
           <div>
             <div className="flex items-center gap-2 text-sky-200 text-xs font-semibold uppercase tracking-wider mb-1">
-              <Globe className="w-4 h-4" /> Multi-Destination Switcher
+              <Globe className="w-4 h-4" /> {isHe ? "ניהול והחלפת יעדים" : "Multi-Destination Switcher"}
             </div>
-            <h3 className="text-xl font-bold">Select or Create Destination</h3>
+            <h3 className="text-xl font-bold">
+              {isHe ? "בחר יעד או צור טיול חדש" : "Select or Create Destination"}
+            </h3>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-white/80 hover:text-white rounded-full bg-black/10 hover:bg-black/20 transition-colors"
+            className="p-2 text-white/80 hover:text-white rounded-full bg-black/10 hover:bg-black/20 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -145,7 +139,7 @@ export function DestinationModal({
             <>
               <div className="space-y-3">
                 <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  Available Trips & Destinations
+                  {isHe ? "הטיולים והיעדים שלי" : "Available Trips & Destinations"}
                 </div>
                 {trips.map((trip) => {
                   const isActive = trip.id === activeTripId;
@@ -171,7 +165,7 @@ export function DestinationModal({
                             <h4 className="font-bold text-slate-800 text-base">{trip.destination}</h4>
                             {isActive && (
                               <span className="px-2 py-0.5 bg-sky-600 text-white text-[11px] font-bold rounded-full">
-                                Active
+                                {isHe ? "פעיל כעת" : "Active"}
                               </span>
                             )}
                           </div>
@@ -183,10 +177,10 @@ export function DestinationModal({
                             </span>
                             <span className="flex items-center gap-1">
                               <Users className="w-3.5 h-3.5 text-slate-400" />
-                              {trip.companions?.length || 1} travelers
+                              {trip.companions?.length || 1} {isHe ? "שותפים" : "travelers"}
                             </span>
                             <span className="font-semibold text-slate-600">
-                              {trip.places?.length || 0} places
+                              {trip.places?.length || 0} {isHe ? "מקומות שמורים" : "places"}
                             </span>
                           </div>
                         </div>
@@ -195,13 +189,13 @@ export function DestinationModal({
                       <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                         {trips.length > 1 && (
                           <button
-                            title="Delete Trip"
+                            title={isHe ? "מחק טיול זה" : "Delete Trip"}
                             onClick={() => {
-                              if (window.confirm(`Are you sure you want to delete "${trip.destination}"?`)) {
+                              if (window.confirm(isHe ? `בטוח שברצונך למחוק את "${trip.destination}"?` : `Are you sure you want to delete "${trip.destination}"?`)) {
                                 onDeleteTrip(trip.id);
                               }
                             }}
-                            className="p-2 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors"
+                            className="p-2 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors cursor-pointer"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -218,40 +212,46 @@ export function DestinationModal({
                 className="w-full py-3 border-2 border-dashed border-sky-300 hover:border-sky-500 bg-sky-50/50 hover:bg-sky-50 text-sky-700 font-semibold rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
-                Add New Destination / Trip
+                <span>{isHe ? "+ צור יעד או טיול חדש" : "Add New Destination / Trip"}</span>
               </button>
             </>
           ) : (
             /* Create Trip Form */
             <form onSubmit={handleSaveNew} className="space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                <h4 className="font-bold text-slate-800 text-sm">Create New Trip Plan</h4>
+                <h4 className="font-bold text-slate-800 text-sm">
+                  {isHe ? "יצירת טיול ויעד חדש" : "Create New Trip Plan"}
+                </h4>
                 <button
                   type="button"
                   onClick={() => setIsCreating(false)}
-                  className="text-xs text-slate-500 hover:text-slate-800"
+                  className="text-xs text-slate-500 hover:text-slate-800 cursor-pointer"
                 >
-                  Cancel
+                  {isHe ? "חזרה לרשימה" : "Cancel"}
                 </button>
               </div>
 
               <div className="grid grid-cols-4 gap-3">
                 <div className="col-span-3">
-                  <label className="block text-xs font-semibold text-slate-600 mb-1">Destination Name *</label>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">
+                    {isHe ? "שם היעד / מדינה / עיר *" : "Destination Name *"}
+                  </label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g., Iceland, Bali, Switzerland"
+                    placeholder={isHe ? "למשל: איטליה, לונדון, תאילנד, פריז..." : "e.g., Iceland, Bali, Switzerland"}
                     value={destination}
                     onChange={(e) => setDestination(e.target.value)}
                     className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 mb-1">Flag / Emoji</label>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">
+                    {isHe ? "דגל / אימוג'י" : "Flag / Emoji"}
+                  </label>
                   <input
                     type="text"
-                    placeholder="🇮🇸"
+                    placeholder="🌴"
                     value={flag}
                     onChange={(e) => setFlag(e.target.value)}
                     className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm text-center focus:ring-2 focus:ring-sky-500 focus:outline-none text-lg"
@@ -260,10 +260,12 @@ export function DestinationModal({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">Trip Subtitle / Route</label>
+                <label className="block text-xs font-semibold text-slate-600 mb-1">
+                  {isHe ? "תיאור קצר / סגנון טיול" : "Trip Subtitle / Route"}
+                </label>
                 <input
                   type="text"
-                  placeholder="e.g., Reykjavik, Golden Circle & South Coast"
+                  placeholder={isHe ? "למשל: חופים, שופינג ומסעדות שף" : "e.g., Reykjavik, Golden Circle & South Coast"}
                   value={subtitle}
                   onChange={(e) => setSubtitle(e.target.value)}
                   className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none"
@@ -272,17 +274,21 @@ export function DestinationModal({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 mb-1">Dates / Date Range</label>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">
+                    {isHe ? "תאריכים" : "Dates / Date Range"}
+                  </label>
                   <input
                     type="text"
-                    placeholder="e.g., Sep 15 – Sep 24, 2026"
+                    placeholder={isHe ? "למשל: 15-22 באוקטובר 2026" : "e.g., Sep 15 – Sep 24, 2026"}
                     value={dateRange}
                     onChange={(e) => setDateRange(e.target.value)}
                     className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 mb-1">Duration (Days)</label>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">
+                    {isHe ? "משך הטיול (ימים)" : "Duration (Days)"}
+                  </label>
                   <input
                     type="number"
                     min="1"
@@ -296,20 +302,24 @@ export function DestinationModal({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 mb-1">Base Currency Code</label>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">
+                    {isHe ? "קוד מטבע" : "Base Currency Code"}
+                  </label>
                   <input
                     type="text"
-                    placeholder="e.g., EUR, ISK, JPY, USD"
+                    placeholder="EUR, USD, ILS, GBP"
                     value={baseCurrency}
                     onChange={(e) => setBaseCurrency(e.target.value.toUpperCase())}
                     className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm uppercase focus:ring-2 focus:ring-sky-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 mb-1">Currency Symbol</label>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">
+                    {isHe ? "סמל מטבע" : "Currency Symbol"}
+                  </label>
                   <input
                     type="text"
-                    placeholder="e.g., €, kr, ¥, $"
+                    placeholder="€, $, ₪, £"
                     value={currencySymbol}
                     onChange={(e) => setCurrencySymbol(e.target.value)}
                     className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none"
@@ -321,15 +331,15 @@ export function DestinationModal({
                 <button
                   type="button"
                   onClick={() => setIsCreating(false)}
-                  className="px-4 py-2 border border-slate-200 text-slate-600 font-medium text-sm rounded-xl hover:bg-slate-50 transition-colors"
+                  className="px-4 py-2 border border-slate-200 text-slate-600 font-medium text-sm rounded-xl hover:bg-slate-50 transition-colors cursor-pointer"
                 >
-                  Cancel
+                  {isHe ? "ביטול" : "Cancel"}
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white font-semibold text-sm rounded-xl shadow-md transition-colors"
+                  className="px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white font-semibold text-sm rounded-xl shadow-md transition-colors cursor-pointer"
                 >
-                  Create Trip
+                  {isHe ? "צור טיול והתחל לתכנן" : "Create Trip"}
                 </button>
               </div>
             </form>
@@ -339,9 +349,9 @@ export function DestinationModal({
         <div className="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-white border border-slate-200 text-slate-700 font-medium text-sm rounded-xl hover:bg-slate-100 transition-colors"
+            className="px-4 py-2 bg-white border border-slate-200 text-slate-700 font-medium text-sm rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
           >
-            Close
+            {isHe ? "סגור" : "Close"}
           </button>
         </div>
       </div>
