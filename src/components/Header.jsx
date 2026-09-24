@@ -40,6 +40,20 @@ export function Header({
       {/* Decorative gradient overlay */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.18),transparent_50%)] pointer-events-none" />
 
+      {/* Main App Title - Centered */}
+      <div className="border-b border-white/10 bg-black/25 backdrop-blur-xs py-3 px-4 text-center relative z-20">
+        <div className="max-w-7xl mx-auto flex flex-col items-center justify-center">
+          <div className="inline-flex items-center gap-2.5">
+            <span className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-white to-sky-200 drop-shadow-md uppercase select-none font-sans">
+              MaxVenture
+            </span>
+          </div>
+          <div className="text-[11px] sm:text-xs text-sky-200/80 font-medium tracking-wide mt-0.5">
+            {isHe ? "מתכנן הטיולים והלו״ז האישי שלי" : "Smart Travel & Itinerary Planner"}
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative z-10">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           {/* Left: Destination Badge & Title */}
