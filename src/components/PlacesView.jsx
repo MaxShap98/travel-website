@@ -159,7 +159,7 @@ export function PlacesView({
                     ? "שם המקום (למשל: מסעדת שף, תצפית, פיצרייה, מוזיאון...)"
                     : "Place name (e.g. Seafood tavern, Viewpoint, Museum...)"
                 }
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-base sm:text-sm font-semibold text-slate-800 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"
               />
             </div>
 
@@ -168,7 +168,7 @@ export function PlacesView({
               <select
                 value={quickCategory}
                 onChange={(e) => setQuickCategory(e.target.value)}
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-bold text-slate-700 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none cursor-pointer"
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-base sm:text-sm font-bold text-slate-700 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none cursor-pointer"
               >
                 <option value="dining">{isHe ? "🍽️ מסעדה ואוכל" : "🍽️ Food & Dining"}</option>
                 <option value="hotels">{isHe ? "🏨 מלון ולינה" : "🏨 Hotel / Stay"}</option>
@@ -188,7 +188,7 @@ export function PlacesView({
                 value={quickLocation}
                 onChange={(e) => setQuickLocation(e.target.value)}
                 placeholder={isHe ? "קישור לגוגל מפות או כתובת" : "Address or Google Maps link"}
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-700 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-base sm:text-sm text-slate-700 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"
               />
             </div>
 
@@ -196,7 +196,7 @@ export function PlacesView({
             <div className="sm:col-span-2">
               <button
                 type="submit"
-                className="w-full h-full py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                className="w-full h-full py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-sm font-bold shadow-md transition-colors cursor-pointer flex items-center justify-center gap-1.5"
               >
                 <Plus className="w-4 h-4" />
                 <span>{isHe ? "הוסף מקום" : "Add Place"}</span>
@@ -214,10 +214,10 @@ export function PlacesView({
                 onChange={(e) => setQuickNotes(e.target.value)}
                 placeholder={
                   isHe
-                    ? "הערות/טיפים אישיים (למשל: להזמין מקום שבועיים מראש, שקיעה מומלצת, מנת ספיישל...)"
+                    ? "הערות/טיפים אישיים (למשל: להזמין מקום מראש, שקיעה מומלצת...)"
                     : "Notes & personal tips (e.g. sunset table, reservation needed...)"
                 }
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-600 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-base sm:text-xs text-slate-600 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"
               />
             </div>
             <div className="sm:col-span-3">
@@ -227,7 +227,7 @@ export function PlacesView({
                 value={quickCost}
                 onChange={(e) => setQuickCost(e.target.value)}
                 placeholder={isHe ? `עלות משוערת (${currencySymbol})` : `Est. Cost (${currencySymbol})`}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-600 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-base sm:text-xs text-slate-600 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"
               />
             </div>
           </div>
