@@ -809,7 +809,9 @@ export default function App() {
         onClose={() => setIsExportModalOpen(false)}
         onImportData={(data) => {
           setTrips(data);
+          const nextId = data.length > 0 ? data[0].id : activeTripId;
           if (data.length > 0) setActiveTripId(data[0].id);
+          triggerCloudSync(data, nextId);
         }}
         onResetDefaults={handleResetDefaults}
         onPrint={handlePrint}
