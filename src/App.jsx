@@ -23,7 +23,8 @@ import {
   subscribeToCloudTrip,
   fetchCloudTrip,
   syncGlobalStateToCloud,
-  subscribeToGlobalState
+  subscribeToGlobalState,
+  fetchGlobalStateFromCloud
 } from "./services/firebase";
 
 const STORAGE_KEY_TRIPS = "travel_planner_trips_v2";
