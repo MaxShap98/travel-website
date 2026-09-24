@@ -7,10 +7,12 @@ export function ItineraryModal({
   onSaveActivity,
   activityToEdit = null,
   trip,
-  places = []
+  places = [],
+  lang = "he"
 }) {
   if (!isOpen || !trip) return null;
 
+  const isHe = lang === "he";
   const isEdit = !!activityToEdit;
   const totalDays = trip.durationDays || 7;
   const daysList = Array.from({ length: totalDays }, (_, i) => i + 1);
@@ -78,7 +80,7 @@ export function ItineraryModal({
     const updated = {
       id: activityToEdit ? activityToEdit.id : "itin-" + Date.now(),
       dayNumber: parseInt(dayNumber),
-      dayLabel: `Day ${dayNumber}`,
+      dayLabel: isHe ? `יום ${dayNumber}` : `Day ${dayNumber}`,
       period,
       time: time.trim() || "TBD",
       activity: activity.trim(),
@@ -97,14 +99,27 @@ export function ItineraryModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fade-in no-print">
-      <div className="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col">
+      <div
+        className="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col"
+        dir={isHe ? "rtl" : "ltr"}
+      >
         {/* Header */}
         <div className="p-5 bg-gradient-to-r from-sky-800 to-indigo-900 text-white flex items-center justify-between shrink-0">
           <div>
             <h3 className="text-base font-bold">
-              {isEdit ? "Edit Itinerary Item" : "Add Itinerary Activity"}
+              {isEdit
+                ? isHe
+                  ? "עריכת פעילות בלו״ז"
+                  : "Edit Itinerary Item"
+                : isHe
+                ? "הוספת פעילות ללו״ז היומי"
+                : "Add Itinerary Activity"}
             </h3>
-            <p className="text-sky-200 text-xs">Schedule and track daily vacation events</p>
+            <p className="text-sky-200 text-xs">
+              {isHe
+                ? "תזמון ומעקב אחר לו״ז הפעילויות היומי"
+                : "Schedule and track daily vacation events"}
+            </p>
           </div>
           <button
             onClick={onClose}
@@ -119,17 +134,19 @@ export function ItineraryModal({
           {/* Link to Curated Recommendation Place Dropdown */}
           <div className="p-3 bg-sky-50/70 border border-sky-200/80 rounded-xl">
             <label className="block text-[11px] font-bold text-sky-900 uppercase tracking-wider mb-1">
-              Link to Curated Place (Optional)
+              {isHe ? "שיוך למקום שמור מהבנק (אופציונלי)" : "Link to Curated Place (Optional)"}
             </label>
             <select
               value={linkedPlaceId}
               onChange={(e) => handlePlaceSelect(e.target.value)}
               className="w-full px-3 py-1.5 bg-white border border-sky-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none"
             >
-              <option value="">-- Or enter custom activity below --</option>
+              <option value="">
+                {isHe ? "-- או הקלד פעילות עצמאית למטה --" : "-- Or enter custom activity below --"}
+              </option>
               {places.map((p) => (
                 <option key={p.id} value={p.id}>
-                  [{p.category.toUpperCase()}] {p.name} ({p.status})
+                  {p.name} ({p.status})
                 </option>
               ))}
             </select>
@@ -137,7 +154,9 @@ export function ItineraryModal({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block font-bold text-slate-700 mb-1">Trip Day *</label>
+              <label className="block font-bold text-slate-700 mb-1">
+                {isHe ? "יום בטיול *" : "Trip Day *"}
+              </label>
               <select
                 value={dayNumber}
                 onChange={(e) => setDayNumber(e.target.value)}
@@ -145,44 +164,50 @@ export function ItineraryModal({
               >
                 {daysList.map((d) => (
                   <option key={d} value={d}>
-                    Day {d}
+                    {isHe ? `יום ${d}` : `Day ${d}`}
                   </option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700 mb-1">Period *</label>
+              <label className="block font-bold text-slate-700 mb-1">
+                {isHe ? "חלק ביום *" : "Period *"}
+              </label>
               <select
                 value={period}
                 onChange={(e) => setPeriod(e.target.value)}
                 className="w-full px-3 py-2 border border-slate-200 rounded-xl font-bold bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"
               >
-                <option value="Morning">🌅 Morning</option>
-                <option value="Afternoon">☀️ Afternoon</option>
-                <option value="Evening">🌇 Evening</option>
-                <option value="Night">🌙 Night</option>
+                <option value="Morning">{isHe ? "🌅 בוקר" : "🌅 Morning"}</option>
+                <option value="Afternoon">{isHe ? "☀️ צהריים" : "☀️ Afternoon"}</option>
+                <option value="Evening">{isHe ? "🌇 ערב" : "🌇 Evening"}</option>
+                <option value="Night">{isHe ? "🌙 לילה" : "🌙 Night"}</option>
               </select>
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             <div className="col-span-2">
-              <label className="block font-bold text-slate-700 mb-1">Activity / Place Name *</label>
+              <label className="block font-bold text-slate-700 mb-1">
+                {isHe ? "שם הפעילות / המקום *" : "Activity / Place Name *"}
+              </label>
               <input
                 type="text"
                 required
-                placeholder="e.g. Acropolis Guided Tour"
+                placeholder={isHe ? "למשל: סיור מודרך, תצפית שקיעה, ארוחת ערב בטברנה..." : "e.g. Acropolis Guided Tour"}
                 value={activity}
                 onChange={(e) => setActivity(e.target.value)}
                 className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-none"
               />
             </div>
             <div>
-              <label className="block font-bold text-slate-700 mb-1">Time (e.g. 08:30)</label>
+              <label className="block font-bold text-slate-700 mb-1">
+                {isHe ? "שעה (למשל 09:30)" : "Time (e.g. 08:30)"}
+              </label>
               <input
                 type="text"
-                placeholder="09:00 AM"
+                placeholder={isHe ? "09:30" : "09:00 AM"}
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
                 className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-none"
@@ -192,43 +217,49 @@ export function ItineraryModal({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block font-bold text-slate-700 mb-1">Category</label>
+              <label className="block font-bold text-slate-700 mb-1">
+                {isHe ? "קטגוריה" : "Category"}
+              </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none"
               >
-                <option value="hotels">🏨 Hotel / Stay</option>
-                <option value="dining">🍽️ Dining</option>
-                <option value="nightlife">🍸 Nightlife</option>
-                <option value="events">⛵ Event / Tour</option>
-                <option value="attractions">🏛️ Attraction</option>
-                <option value="tips">🧳 Transit / Other</option>
+                <option value="hotels">{isHe ? "🏨 מלון / לינה" : "🏨 Hotel / Stay"}</option>
+                <option value="dining">{isHe ? "🍽️ מסעדה / אוכל" : "🍽️ Dining"}</option>
+                <option value="nightlife">{isHe ? "🍸 חיי לילה / בר" : "🍸 Nightlife"}</option>
+                <option value="events">{isHe ? "⛵ סיור / מסיבה / הפלגה" : "⛵ Event / Tour"}</option>
+                <option value="attractions">{isHe ? "🏛️ אטרקציה / בילוי" : "🏛️ Attraction"}</option>
+                <option value="tips">{isHe ? "🧳 נסיעה / תחבורה / שונות" : "🧳 Transit / Other"}</option>
               </select>
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700 mb-1">Booking Status</label>
+              <label className="block font-bold text-slate-700 mb-1">
+                {isHe ? "סטטוס הזמנה" : "Booking Status"}
+              </label>
               <select
                 value={bookingStatus}
                 onChange={(e) => setBookingStatus(e.target.value)}
                 className="w-full px-3 py-2 border border-slate-200 rounded-xl font-bold bg-white text-sky-800 focus:ring-2 focus:ring-sky-500 focus:outline-none"
               >
-                <option value="Confirmed">✓ Confirmed</option>
-                <option value="Reserved">📅 Reserved</option>
-                <option value="Need to Book">⚠️ Need to Book</option>
-                <option value="Walk-in">🚶 Walk-in</option>
-                <option value="Free">🆓 Free</option>
+                <option value="Confirmed">{isHe ? "✓ מאושר / כרטיסים ביד" : "✓ Confirmed"}</option>
+                <option value="Reserved">{isHe ? "📅 שמור מקום / הוזמן" : "📅 Reserved"}</option>
+                <option value="Need to Book">{isHe ? "⚠️ נדרש להזמין מראש" : "⚠️ Need to Book"}</option>
+                <option value="Walk-in">{isHe ? "🚶 הגעה חופשית (Walk-in)" : "🚶 Walk-in"}</option>
+                <option value="Free">{isHe ? "🆓 חינם" : "🆓 Free"}</option>
               </select>
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             <div className="col-span-2">
-              <label className="block font-bold text-slate-700 mb-1">Location / Address</label>
+              <label className="block font-bold text-slate-700 mb-1">
+                {isHe ? "מיקום / כתובת" : "Location / Address"}
+              </label>
               <input
                 type="text"
-                placeholder="e.g. Syntagma Square, Athens"
+                placeholder={isHe ? "למשל: כיכר מרכזית, ליד הנמל..." : "e.g. Syntagma Square, Athens"}
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500 focus:outline-none"
@@ -237,7 +268,7 @@ export function ItineraryModal({
 
             <div>
               <label className="block font-bold text-slate-700 mb-1">
-                Estimated Cost ({trip.currencySymbol || "€"})
+                {isHe ? `עלות משוערת (${trip.currencySymbol || "€"})` : `Estimated Cost (${trip.currencySymbol || "€"})`}
               </label>
               <input
                 type="number"
@@ -250,10 +281,16 @@ export function ItineraryModal({
           </div>
 
           <div>
-            <label className="block font-bold text-slate-700 mb-1">Notes & Reminders</label>
+            <label className="block font-bold text-slate-700 mb-1">
+              {isHe ? "הערות ותזכורות" : "Notes & Reminders"}
+            </label>
             <textarea
               rows="2"
-              placeholder="e.g. Bring passports for check-in, confirmation code #12345"
+              placeholder={
+                isHe
+                  ? "למשל: להביא דרכון, קוד הזמנה #12345, להגיע 15 דקות מראש..."
+                  : "e.g. Bring passports for check-in, confirmation code #12345"
+              }
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500 focus:outline-none"
@@ -270,7 +307,7 @@ export function ItineraryModal({
                 className="w-4 h-4 rounded text-sky-600 focus:ring-sky-500"
               />
               <label htmlFor="modal-completed" className="font-semibold text-slate-700 cursor-pointer">
-                Mark this activity as completed
+                {isHe ? "סמן פעילות זו ככזו שבוצעה" : "Mark this activity as completed"}
               </label>
             </div>
           )}
@@ -279,15 +316,15 @@ export function ItineraryModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl transition-colors font-semibold"
+              className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl transition-colors font-semibold cursor-pointer"
             >
-              Cancel
+              {isHe ? "ביטול" : "Cancel"}
             </button>
             <button
               type="submit"
-              className="px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl shadow-md transition-colors"
+              className="px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl shadow-md transition-colors cursor-pointer"
             >
-              {isEdit ? "Update Activity" : "Add to Schedule"}
+              {isEdit ? (isHe ? "עדכן פעילות" : "Update Activity") : isHe ? "הוסף ללו״ז היומי" : "Add to Schedule"}
             </button>
           </div>
         </form>
