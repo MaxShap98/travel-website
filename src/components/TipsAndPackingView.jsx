@@ -18,12 +18,16 @@ export function TipsAndPackingView({
   packingList = [],
   onTogglePackingItem,
   onAddPackingItem,
-  onDeletePackingItem
+  onDeletePackingItem,
+  lang = "he"
 }) {
+  const isHe = lang === "he";
   const [newItemText, setNewItemText] = useState("");
-  const [newItemCategory, setNewItemCategory] = useState("Clothing");
+  const [newItemCategory, setNewItemCategory] = useState(isHe ? "ביגוד" : "Clothing");
 
-  const categories = ["Documents", "Clothing", "Beach Gear", "Tech & Gadgets", "Health & Toiletries"];
+  const categories = isHe
+    ? ["מסמכים", "ביגוד", "ציוד חוף ובריכה", "אלקטרוניקה וגאדג'טים", "בריאות והיגיינה", "שונות"]
+    : ["Documents", "Clothing", "Beach Gear", "Tech & Gadgets", "Health & Toiletries", "General"];
 
   const handleAdd = (e) => {
     e.preventDefault();
@@ -46,7 +50,7 @@ export function TipsAndPackingView({
 
   // Group by category
   const groupedPacking = packingList.reduce((acc, it) => {
-    const cat = it.category || "General";
+    const cat = it.category || (isHe ? "כללי" : "General");
     if (!acc[cat]) acc[cat] = [];
     acc[cat].push(it);
     return acc;
@@ -59,25 +63,29 @@ export function TipsAndPackingView({
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" dir={isHe ? "rtl" : "ltr"}>
       {/* Top Section: Packing Checklist */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
         {/* Header */}
         <div className="p-5 bg-gradient-to-r from-sky-900 to-indigo-950 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-sky-300 text-xs font-bold uppercase tracking-wider mb-1">
-              <CheckSquare className="w-4 h-4" /> Trip Essentials
+              <CheckSquare className="w-4 h-4" /> {isHe ? "ציוד וארגון המזוודה" : "Trip Essentials"}
             </div>
-            <h3 className="text-xl font-bold">Interactive Packing Checklist</h3>
+            <h3 className="text-xl font-bold">
+              {isHe ? "רשימת אריזה אינטראקטיבית" : "Interactive Packing Checklist"}
+            </h3>
             <p className="text-sky-200 text-xs mt-0.5">
-              Keep your luggage dialed in and avoid airport surprises
+              {isHe
+                ? "סמן פריטים שנארזו והוסף דברים אישיים כדי לא לשכוח כלום"
+                : "Keep your luggage dialed in and avoid airport surprises"}
             </p>
           </div>
 
           {/* Progress bar */}
           <div className="bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/15 min-w-[200px]">
             <div className="flex justify-between text-xs font-bold text-white mb-1">
-              <span>Packed Status</span>
+              <span>{isHe ? "סטטוס אריזה" : "Packed Status"}</span>
               <span className="text-emerald-300">
                 {completedCount}/{totalCount} ({packedPercent}%)
               </span>
@@ -96,7 +104,7 @@ export function TipsAndPackingView({
           <input
             type="text"
             required
-            placeholder="Add new item (e.g. Snorkeling mask, Power adapter...)"
+            placeholder={isHe ? "הוסף פריט חדש (למשל: קרם הגנה, שנורקל, מטען נייד...)" : "Add new item (e.g. Snorkeling mask, Power adapter...)"}
             value={newItemText}
             onChange={(e) => setNewItemText(e.target.value)}
             className="flex-1 min-w-[220px] px-3 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500 focus:outline-none font-medium"
@@ -117,7 +125,7 @@ export function TipsAndPackingView({
             className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl transition-colors flex items-center gap-1 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
-            Add
+            <span>{isHe ? "הוסף" : "Add"}</span>
           </button>
         </form>
 
@@ -144,7 +152,7 @@ export function TipsAndPackingView({
                   >
                     <button
                       onClick={() => onTogglePackingItem(it.id)}
-                      className="flex items-center gap-2.5 text-left flex-1 cursor-pointer"
+                      className="flex items-center gap-2.5 text-right flex-1 cursor-pointer"
                     >
                       {it.completed ? (
                         <CheckSquare className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -159,7 +167,7 @@ export function TipsAndPackingView({
                     <button
                       onClick={() => onDeletePackingItem(it.id)}
                       className="opacity-0 group-hover:opacity-100 p-1 text-slate-300 hover:text-rose-600 transition-opacity cursor-pointer"
-                      title="Delete item"
+                      title={isHe ? "מחק פריט" : "Delete item"}
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -177,7 +185,9 @@ export function TipsAndPackingView({
         <div className="bg-white rounded-2xl border border-rose-200/80 shadow-xs overflow-hidden">
           <div className="p-4 bg-rose-50 border-b border-rose-100 flex items-center gap-2 text-rose-900">
             <ShieldAlert className="w-4 h-4 text-rose-600" />
-            <h4 className="font-bold text-sm">Emergency & Medical</h4>
+            <h4 className="font-bold text-sm">
+              {isHe ? "מוקדי חירום ועזרה ראשונה" : "Emergency & Medical"}
+            </h4>
           </div>
           <div className="p-4 divide-y divide-slate-100 space-y-2 text-xs">
             {tips.emergencyContacts?.map((c, idx) => (
@@ -202,7 +212,9 @@ export function TipsAndPackingView({
         <div className="bg-white rounded-2xl border border-sky-200/80 shadow-xs overflow-hidden">
           <div className="p-4 bg-sky-50 border-b border-sky-100 flex items-center gap-2 text-sky-900">
             <Bus className="w-4 h-4 text-sky-600" />
-            <h4 className="font-bold text-sm">Local Transit & Logistics</h4>
+            <h4 className="font-bold text-sm">
+              {isHe ? "תחבורה מקומית ונסיעות" : "Local Transit & Logistics"}
+            </h4>
           </div>
           <div className="p-4 space-y-3 text-xs">
             {tips.transitInfo?.map((t, idx) => (
@@ -218,7 +230,9 @@ export function TipsAndPackingView({
         <div className="bg-white rounded-2xl border border-emerald-200/80 shadow-xs overflow-hidden">
           <div className="p-4 bg-emerald-50 border-b border-emerald-100 flex items-center gap-2 text-emerald-900">
             <Coins className="w-4 h-4 text-emerald-600" />
-            <h4 className="font-bold text-sm">Money, ATMs & Tipping</h4>
+            <h4 className="font-bold text-sm">
+              {isHe ? "כספים, כספומטים וטיפים" : "Money, ATMs & Tipping"}
+            </h4>
           </div>
           <div className="p-4 space-y-3 text-xs">
             {tips.currencyAdvice?.map((ca, idx) => (
