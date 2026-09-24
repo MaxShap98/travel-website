@@ -688,8 +688,8 @@ export default function App() {
         <footer className="bg-white border-t border-slate-200/80 py-5 text-center text-xs text-slate-500">
           <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-slate-800">
-                {isHe ? "מתכנן הטיולים שלי" : "Travel Planner"}
+              <span className="font-extrabold text-slate-800 tracking-wide">
+                MaxVenture
               </span>
               <span>·</span>
               <span>{isHe ? "כל השינויים נשמרים אוטומטית בדפדפן שלך" : "Saved locally in your browser"}</span>
