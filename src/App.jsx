@@ -715,20 +715,25 @@ export default function App() {
         lang={lang}
         onSelectTrip={(id) => {
           setActiveTripId(id);
+          triggerCloudSync(trips, id);
           showToast({
             type: "info",
             message: isHe ? "היעד הוחלף" : "Destination switched"
           });
         }}
         onCreateTrip={(newTrip) => {
-          setTrips((prev) => [newTrip, ...prev]);
+          const updated = [newTrip, ...trips];
+          setTrips(updated);
           setActiveTripId(newTrip.id);
+          triggerCloudSync(updated, newTrip.id);
         }}
         onDeleteTrip={(id) => {
           if (trips.length <= 1) return;
           const rem = trips.filter((t) => t.id !== id);
+          const nextActive = activeTripId === id ? rem[0].id : activeTripId;
           setTrips(rem);
-          if (activeTripId === id) setActiveTripId(rem[0].id);
+          if (activeTripId === id) setActiveTripId(nextActive);
+          triggerCloudSync(rem, nextActive);
         }}
         isOpen={isDestinationModalOpen}
         onClose={() => setIsDestinationModalOpen(false)}
