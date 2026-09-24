@@ -166,17 +166,18 @@ const GLOBAL_STATE_DOC = "global_master_state";
  * Save entire global planner state (all trips and active ID) to Firestore
  * This ensures that EVERY visitor sees the exact same trips in real-time!
  */
-export async function syncGlobalStateToCloud(trips, activeTripId) {
+export async function syncGlobalStateToCloud(trips, activeTripId, customTimestamp = null) {
   if (!isFirebaseReady() || !dbInstance || !trips || trips.length === 0) {
     return false;
   }
 
   try {
     const sanitizedTrips = JSON.parse(JSON.stringify(trips));
+    const timestamp = customTimestamp || new Date().toISOString();
     const payload = {
       trips: sanitizedTrips,
       activeTripId: activeTripId || (trips[0] ? trips[0].id : "my-trip"),
-      lastUpdatedCloud: new Date().toISOString()
+      lastUpdatedCloud: timestamp
     };
 
     const globalRef = doc(dbInstance, "app_state", GLOBAL_STATE_DOC);
@@ -184,7 +185,28 @@ export async function syncGlobalStateToCloud(trips, activeTripId) {
     return true;
   } catch (err) {
     console.error("Error saving global state to cloud:", err);
-    return false;
+    throw err;
+  }
+}
+
+/**
+ * Fetch the latest global state from Firestore once
+ */
+export async function fetchGlobalStateFromCloud() {
+  if (!isFirebaseReady() || !dbInstance) {
+    return null;
+  }
+
+  try {
+    const globalRef = doc(dbInstance, "app_state", GLOBAL_STATE_DOC);
+    const snap = await getDoc(globalRef);
+    if (snap.exists()) {
+      return snap.data();
+    }
+    return null;
+  } catch (err) {
+    console.error("Error fetching global state from cloud:", err);
+    throw err;
   }
 }
 
