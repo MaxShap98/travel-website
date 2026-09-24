@@ -887,18 +887,12 @@ export default function App() {
 
       <FirebaseSyncModal
         trip={currentTrip}
+        allTrips={trips}
         isOpen={isSyncModalOpen}
         lang={lang}
         onClose={() => setIsSyncModalOpen(false)}
-        onTripLoadedFromCloud={(loadedTrip) => {
-          setTrips((prev) => {
-            const exists = prev.some((t) => t.id === loadedTrip.id);
-            return exists
-              ? prev.map((t) => (t.id === loadedTrip.id ? loadedTrip : t))
-              : [loadedTrip, ...prev];
-          });
-          setActiveTripId(loadedTrip.id);
-        }}
+        onForcePush={handleForceSyncToCloud}
+        onForcePull={handleForcePullFromCloud}
         onToast={showToast}
       />
 
