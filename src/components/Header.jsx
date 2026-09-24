@@ -57,12 +57,12 @@ export function Header({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative z-10">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           {/* Left: Destination Badge & Title */}
-          <div>
-            <div className="flex flex-wrap items-center gap-2 mb-2">
+          <div className="min-w-0 w-full lg:w-auto">
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-2 overflow-x-auto pb-1 scrollbar-none flex-nowrap sm:flex-wrap">
               {/* Destination Tag / Badge */}
               <button
                 onClick={onOpenDestinationModal}
-                className="group inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/40 text-sky-200 hover:text-white transition-all text-xs font-bold tracking-wide uppercase cursor-pointer"
+                className="group inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/40 text-sky-200 hover:text-white transition-all text-xs font-bold tracking-wide uppercase cursor-pointer whitespace-nowrap shrink-0"
                 title={isHe ? "לחץ להחלפת יעד או שינוי שם" : "Click to switch destination"}
               >
                 <span className="text-base">{trip.flag || "🌍"}</span>
@@ -73,7 +73,7 @@ export function Header({
               {/* Start Fresh Blank Trip Button */}
               <button
                 onClick={onStartBlankTrip}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-300 hover:text-white text-xs font-bold transition-all cursor-pointer shadow-xs"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-300 hover:text-white text-xs font-bold transition-all cursor-pointer shadow-xs whitespace-nowrap shrink-0"
                 title={isHe ? "התחל טיול חדש ונקי ללא נתונים לדוגמה" : "Start a blank canvas trip"}
               >
                 <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
@@ -83,7 +83,7 @@ export function Header({
               {/* Clear Current Trip Places & Schedule */}
               <button
                 onClick={onClearTrip}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/10 hover:bg-rose-500/20 hover:border-rose-400/40 text-slate-300 hover:text-rose-300 text-xs font-semibold transition-all cursor-pointer"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/10 hover:bg-rose-500/20 hover:border-rose-400/40 text-slate-300 hover:text-rose-300 text-xs font-semibold transition-all cursor-pointer whitespace-nowrap shrink-0"
                 title={isHe ? "נקה את כל המקומות והלו״ז של הטיול הנוכחי" : "Clear all places & schedule"}
               >
                 <RotateCcw className="w-3 h-3" />
@@ -92,7 +92,7 @@ export function Header({
             </div>
 
             <div className="flex items-baseline gap-3">
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white" dir="auto">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-white truncate max-w-full" dir="auto">
                 {trip.title || trip.destination}
               </h1>
             </div>
@@ -103,11 +103,11 @@ export function Header({
           </div>
 
           {/* Right: Meta Info Widgets & Action Controls */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none flex-nowrap lg:flex-wrap w-full lg:w-auto">
             {/* Cloud Sync Button */}
             <button
               onClick={onOpenSyncModal}
-              className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs ${
+              className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs whitespace-nowrap shrink-0 ${
                 isCloudSyncActive
                   ? "bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-emerald-400/40"
                   : "bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border-amber-400/40"
