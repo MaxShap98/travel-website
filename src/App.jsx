@@ -210,6 +210,16 @@ export default function App() {
 
     const unsub = subscribeToGlobalState((cloudData) => {
       if (cloudData && Array.isArray(cloudData.trips) && cloudData.trips.length > 0) {
+        // Protect local custom places: if local has places and cloud has 0 places, push local to cloud!
+        const localPlacesCount = trips.reduce((acc, t) => acc + (t.places?.length || 0), 0);
+        const cloudPlacesCount = cloudData.trips.reduce((acc, t) => acc + (t.places?.length || 0), 0);
+
+        if (localPlacesCount > 0 && cloudPlacesCount === 0) {
+          console.log("Local has places but cloud has none. Pushing local to cloud...");
+          triggerCloudSync(trips, activeTripId);
+          return;
+        }
+
         if (cloudData.lastUpdatedCloud !== lastRemoteTimestampRef.current) {
           lastRemoteTimestampRef.current = cloudData.lastUpdatedCloud;
           isApplyingRemoteSyncRef.current = true;
@@ -221,9 +231,10 @@ export default function App() {
             isApplyingRemoteSyncRef.current = false;
           }, 400);
         }
-      } else if (cloudData === null) {
-        // First-time database initialization with master state
-        syncGlobalStateToCloud(trips, activeTripId);
+      } else {
+        // Cloud is empty or missing: seed cloud with current state!
+        console.log("Cloud has no trips. Initializing cloud from local trips...");
+        triggerCloudSync(trips, activeTripId);
       }
     }, (err) => {
       console.warn("Global Firestore sync notice:", err);
@@ -249,9 +260,64 @@ export default function App() {
     if (isFirebaseReady() && !isApplyingRemoteSyncRef.current) {
       const stamp = new Date().toISOString();
       lastRemoteTimestampRef.current = stamp;
-      syncGlobalStateToCloud(nextTrips, nextActiveId).catch((err) =>
-        console.error("Auto cloud sync error", err)
-      );
+      syncGlobalStateToCloud(nextTrips, nextActiveId, stamp).catch((err) => {
+        console.error("Auto cloud sync error", err);
+      });
+    }
+  };
+
+  // Force Push Current State to Cloud
+  const handleForceSyncToCloud = async () => {
+    try {
+      const stamp = new Date().toISOString();
+      lastRemoteTimestampRef.current = stamp;
+      await syncGlobalStateToCloud(trips, activeTripId, stamp);
+      showToast({
+        type: "success",
+        message: isHe
+          ? "כל המקומות והלו״ז סונכרנו בהצלחה לענן! פתח בטלפון והכל יופיע."
+          : "All places and itinerary synced to cloud! Open on phone now."
+      });
+      return true;
+    } catch (err) {
+      showToast({
+        type: "error",
+        message: isHe ? `שגיאה בסנכרון לענן: ${err.message}` : `Sync failed: ${err.message}`
+      });
+      return false;
+    }
+  };
+
+  // Force Pull Latest State from Cloud
+  const handleForcePullFromCloud = async () => {
+    try {
+      const cloudData = await fetchGlobalStateFromCloud();
+      if (cloudData && Array.isArray(cloudData.trips) && cloudData.trips.length > 0) {
+        lastRemoteTimestampRef.current = cloudData.lastUpdatedCloud;
+        isApplyingRemoteSyncRef.current = true;
+        setTrips(cloudData.trips);
+        if (cloudData.activeTripId) setActiveTripId(cloudData.activeTripId);
+        setTimeout(() => {
+          isApplyingRemoteSyncRef.current = false;
+        }, 400);
+        showToast({
+          type: "success",
+          message: isHe ? "הנתונים העדכניים ביותר נמשכו בהצלחה מהענן!" : "Fetched latest data from cloud!"
+        });
+        return true;
+      } else {
+        showToast({
+          type: "info",
+          message: isHe ? "לא נמצאו נתונים בענן." : "No data found in cloud."
+        });
+        return false;
+      }
+    } catch (err) {
+      showToast({
+        type: "error",
+        message: isHe ? `שגיאה במשיכה מהענן: ${err.message}` : `Pull failed: ${err.message}`
+      });
+      return false;
     }
   };
 
