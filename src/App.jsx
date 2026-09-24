@@ -543,6 +543,7 @@ export default function App() {
   const handleResetDefaults = () => {
     setTrips(initialTrips);
     setActiveTripId(initialTrips[0].id);
+    triggerCloudSync(initialTrips, initialTrips[0].id);
     showToast({
       type: "success",
       message: isHe ? "שוחזרו טיולי הדוגמה." : "Reset to sample trips."
