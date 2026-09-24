@@ -151,6 +151,68 @@ export function subscribeToCloudTrip(tripId, onUpdate, onError) {
   }
 }
 
+const GLOBAL_STATE_DOC = "global_master_state";
+
+/**
+ * Save entire global planner state (all trips and active ID) to Firestore
+ * This ensures that EVERY visitor sees the exact same trips in real-time!
+ */
+export async function syncGlobalStateToCloud(trips, activeTripId) {
+  if (!isFirebaseReady() || !dbInstance || !trips || trips.length === 0) {
+    return false;
+  }
+
+  try {
+    const sanitizedTrips = JSON.parse(JSON.stringify(trips));
+    const payload = {
+      trips: sanitizedTrips,
+      activeTripId: activeTripId || (trips[0] ? trips[0].id : "my-trip"),
+      lastUpdatedCloud: new Date().toISOString()
+    };
+
+    const globalRef = doc(dbInstance, "app_state", GLOBAL_STATE_DOC);
+    await setDoc(globalRef, payload, { merge: true });
+    return true;
+  } catch (err) {
+    console.error("Error saving global state to cloud:", err);
+    return false;
+  }
+}
+
+/**
+ * Real-time listener for the shared global planner state
+ * Anyone browsing the site connects to this live snapshot automatically!
+ */
+export function subscribeToGlobalState(onUpdate, onError) {
+  if (!isFirebaseReady() || !dbInstance) {
+    return null;
+  }
+
+  try {
+    const globalRef = doc(dbInstance, "app_state", GLOBAL_STATE_DOC);
+    const unsubscribe = onSnapshot(
+      globalRef,
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          onUpdate(data);
+        } else {
+          // Document does not exist yet (first-time initialization)
+          onUpdate(null);
+        }
+      },
+      (err) => {
+        console.error("Global cloud sync snapshot error:", err);
+        if (onError) onError(err);
+      }
+    );
+    return unsubscribe;
+  } catch (err) {
+    console.error("Failed to subscribe to global cloud state:", err);
+    return null;
+  }
+}
+
 /**
  * One-time fetch of a trip by code/id
  */
