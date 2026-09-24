@@ -243,6 +243,17 @@ export default function App() {
     }, 3500);
   };
 
+  // Helper to push all trips & active ID to Firestore
+  const triggerCloudSync = (nextTrips, nextActiveId = activeTripId) => {
+    if (isFirebaseReady() && !isApplyingRemoteSyncRef.current) {
+      const stamp = new Date().toISOString();
+      lastRemoteTimestampRef.current = stamp;
+      syncGlobalStateToCloud(nextTrips, nextActiveId).catch((err) =>
+        console.error("Auto cloud sync error", err)
+      );
+    }
+  };
+
   // Helper to update current trip with real-time automatic cloud sync
   const updateCurrentTrip = (updater) => {
     setTrips((prevTrips) => {
@@ -255,15 +266,7 @@ export default function App() {
         return t;
       });
 
-      // Automatically sync to Firestore cloud so all devices update live!
-      if (isFirebaseReady() && !isApplyingRemoteSyncRef.current) {
-        const stamp = new Date().toISOString();
-        lastRemoteTimestampRef.current = stamp;
-        syncGlobalStateToCloud(nextTrips, activeTripId).catch((err) =>
-          console.error("Auto cloud sync error", err)
-        );
-      }
-
+      triggerCloudSync(nextTrips, activeTripId);
       return nextTrips;
     });
   };
@@ -320,7 +323,11 @@ export default function App() {
       }
     };
 
-    setTrips((prev) => [newTrip, ...prev]);
+    setTrips((prev) => {
+      const updated = [newTrip, ...prev];
+      triggerCloudSync(updated, newTrip.id);
+      return updated;
+    });
     setActiveTripId(newTrip.id);
     setActiveTab("places");
     showToast({
