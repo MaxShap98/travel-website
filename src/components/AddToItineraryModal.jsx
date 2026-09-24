@@ -44,9 +44,9 @@ export function AddToItineraryModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fade-in no-print">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/60 backdrop-blur-sm animate-fade-in no-print">
       <div
-        className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden"
+        className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[96vh] sm:max-h-[90vh] flex flex-col"
         dir={isHe ? "rtl" : "ltr"}
       >
         {/* Header */}
