@@ -57,7 +57,7 @@ export function ItineraryTable({
   const bookingStyles = {
     Confirmed: {
       class: "bg-emerald-100 text-emerald-800 border-emerald-300",
-      label: isHe ? "הוזמן" : "Confirmed"
+      label: isHe ? "מאושר" : "Confirmed"
     },
     Reserved: {
       class: "bg-sky-100 text-sky-800 border-sky-300",
@@ -73,7 +73,7 @@ export function ItineraryTable({
     },
     "Walk-in": {
       class: "bg-slate-100 text-slate-700 border-slate-300",
-      label: isHe ? "הגעה חופשית" : "Walk-in"
+      label: isHe ? "חופשי" : "Walk-in"
     },
     Free: {
       class: "bg-teal-100 text-teal-800 border-teal-300 font-bold",
@@ -81,9 +81,164 @@ export function ItineraryTable({
     }
   };
 
+  if (items.length === 0) {
+    return (
+      <div className="bg-white rounded-xl border border-slate-200/80 p-8 text-center text-slate-400 text-xs">
+        {isHe ? "אין פעילויות לתצוגה בסינון הנוכחי" : "No activities match the current filter"}
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
-      <div className="overflow-x-auto">
+    <div className="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden" dir={isHe ? "rtl" : "ltr"}>
+      {/* 📱 MOBILE VIEW: Compact Interactive Cards (< md screens) */}
+      <div className="block md:hidden divide-y divide-slate-100">
+        {items.map((item, index) => {
+          const periodStyle = periodStyles[item.period] || periodStyles.Morning;
+          const PeriodIcon = periodStyle.icon;
+          const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+            `${item.activity} ${item.location || ""}`
+          )}`;
+          const bStatus = bookingStyles[item.bookingStatus] || {
+            class: "bg-slate-100 text-slate-700",
+            label: item.bookingStatus
+          };
+
+          return (
+            <div
+              key={item.id}
+              className={`p-3.5 space-y-2.5 transition-colors ${
+                item.completed ? "bg-slate-50/60 opacity-60" : "bg-white"
+              }`}
+            >
+              {/* Header: Done + Day/Period + Title */}
+              <div className="flex items-start gap-2.5">
+                <button
+                  onClick={() => onToggleComplete(item.id)}
+                  className="mt-0.5 text-slate-300 hover:text-sky-600 transition-colors p-1 cursor-pointer shrink-0"
+                  title={item.completed ? "Mark uncompleted" : "Mark completed"}
+                >
+                  {item.completed ? (
+                    <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                  ) : (
+                    <Circle className="w-5 h-5 hover:stroke-sky-600" />
+                  )}
+                </button>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                    <span className="text-sky-900 bg-sky-50 px-2 py-0.5 rounded text-[10px] border border-sky-100 font-extrabold">
+                      {isHe ? `יום ${item.dayNumber}` : item.dayLabel || `Day ${item.dayNumber}`}
+                    </span>
+                    <span
+                      className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold border ${periodStyle.bg}`}
+                    >
+                      <PeriodIcon className={`w-3 h-3 ${periodStyle.iconColor}`} />
+                      <span>{periodStyle.label}</span>
+                    </span>
+                    {item.time && (
+                      <span className="text-[10px] text-slate-500 font-medium">
+                        {item.time}
+                      </span>
+                    )}
+                  </div>
+
+                  <h4
+                    dir="auto"
+                    className={`font-bold text-slate-900 text-sm break-words ${
+                      item.completed ? "line-through text-slate-400" : ""
+                    }`}
+                  >
+                    {item.activity}
+                  </h4>
+
+                  {item.location && (
+                    <div className="flex items-center gap-1 text-[11px] text-slate-500 mt-0.5">
+                      <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      <span className="truncate">{item.location}</span>
+                      <a
+                        href={mapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sky-600 p-0.5"
+                        title="Google Maps"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  )}
+
+                  {item.notes && (
+                    <p className="text-[11px] text-slate-600 bg-slate-50 p-1.5 rounded border border-slate-100 mt-1" dir="auto">
+                      💡 {item.notes}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Footer: Cost/Status + Action Buttons */}
+              <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="font-extrabold text-slate-800 text-xs">
+                    {item.cost > 0 ? `${currencySymbol}${item.cost}` : isHe ? "חינם" : "Free"}
+                  </span>
+                  {item.bookingStatus && (
+                    <span
+                      className={`text-[10px] px-1.5 py-0.2 rounded font-bold border ${bStatus.class}`}
+                    >
+                      {bStatus.label}
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-1">
+                  <button
+                    disabled={index === 0}
+                    onClick={() => onMoveUp(index)}
+                    className={`p-1.5 rounded-lg border border-slate-200 transition-colors ${
+                      index === 0 ? "opacity-20 cursor-not-allowed" : "text-slate-600 hover:bg-slate-100 cursor-pointer"
+                    }`}
+                    title={isHe ? "העלה למעלה" : "Move Up"}
+                  >
+                    <ArrowUp className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    disabled={index === items.length - 1}
+                    onClick={() => onMoveDown(index)}
+                    className={`p-1.5 rounded-lg border border-slate-200 transition-colors ${
+                      index === items.length - 1 ? "opacity-20 cursor-not-allowed" : "text-slate-600 hover:bg-slate-100 cursor-pointer"
+                    }`}
+                    title={isHe ? "הורד למטה" : "Move Down"}
+                  >
+                    <ArrowDown className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={() => onEdit(item)}
+                    className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:text-sky-600 hover:bg-sky-50 transition-colors cursor-pointer"
+                    title={isHe ? "ערוך" : "Edit"}
+                  >
+                    <Edit2 className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (window.confirm(isHe ? `למחוק את "${item.activity}"?` : `Delete "${item.activity}"?`)) {
+                        onDelete(item.id);
+                      }
+                    }}
+                    className="p-1.5 rounded-lg border border-slate-200 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                    title={isHe ? "מחק" : "Delete"}
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* 💻 DESKTOP TABLE VIEW (>= md screens) */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left border-collapse" dir={isHe ? "rtl" : "ltr"}>
           <thead>
             <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
@@ -232,7 +387,7 @@ export function ItineraryTable({
                         className={`p-1 rounded hover:bg-slate-100 transition-colors ${
                           index === 0 ? "opacity-20 cursor-not-allowed" : "text-slate-400 hover:text-slate-800 cursor-pointer"
                         }`}
-                        title="Move Up"
+                        title={isHe ? "העלה למעלה" : "Move Up"}
                       >
                         <ArrowUp className="w-3.5 h-3.5" />
                       </button>
@@ -245,7 +400,7 @@ export function ItineraryTable({
                             ? "opacity-20 cursor-not-allowed"
                             : "text-slate-400 hover:text-slate-800 cursor-pointer"
                         }`}
-                        title="Move Down"
+                        title={isHe ? "הורד למטה" : "Move Down"}
                       >
                         <ArrowDown className="w-3.5 h-3.5" />
                       </button>
