@@ -86,7 +86,15 @@ export function initFirebase(config = null) {
     } else {
       currentApp = initializeApp(conf);
     }
-    dbInstance = getFirestore(currentApp);
+
+    try {
+      dbInstance = initializeFirestore(currentApp, {
+        experimentalForceLongPolling: true
+      });
+    } catch (e) {
+      dbInstance = getFirestore(currentApp);
+    }
+
     return true;
   } catch (e) {
     console.error("Firebase initialization failed:", e);
