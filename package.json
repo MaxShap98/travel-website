@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "push": "powershell -ExecutionPolicy Bypass -File ./sync-now.ps1",
+    "auto-push": "powershell -ExecutionPolicy Bypass -File ./auto-sync.ps1",
     "lint": "oxlint",
     "preview": "vite preview"
   },
