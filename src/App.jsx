@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { initialTrips } from "./data/initialTrips";
 import { Header } from "./components/Header";
 import { Navbar } from "./components/Navbar";
@@ -21,7 +21,9 @@ import {
   isFirebaseReady,
   syncTripToCloud,
   subscribeToCloudTrip,
-  fetchCloudTrip
+  fetchCloudTrip,
+  syncGlobalStateToCloud,
+  subscribeToGlobalState
 } from "./services/firebase";
 
 const STORAGE_KEY_TRIPS = "travel_planner_trips_v2";
