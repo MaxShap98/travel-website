@@ -193,67 +193,45 @@ export default function App() {
     }
   }, []);
 
+  // Refs to prevent circular sync echo
+  const isApplyingRemoteSyncRef = useRef(false);
+  const lastRemoteTimestampRef = useRef("");
+
   // Check cloud readiness
   useEffect(() => {
     setIsCloudReady(isFirebaseReady());
   }, [isSyncModalOpen]);
 
-  // Read shared room from URL query ?room=... if present
+  // Shared Master Cloud Sync (Firestore)
+  // Ensures ANY visitor on ANY device (PC, Mobile, Tablet) automatically sees and updates the exact same trip!
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const room = params.get("room");
-    if (room) {
-      fetchCloudTrip(room)
-        .then((cloudTrip) => {
-          if (cloudTrip && cloudTrip.destination) {
-            setTrips((prev) => {
-              const exists = prev.some((t) => t.id === cloudTrip.id);
-              return exists
-                ? prev.map((t) => (t.id === cloudTrip.id ? cloudTrip : t))
-                : [cloudTrip, ...prev];
-            });
-            setActiveTripId(cloudTrip.id);
-            showToast({
-              type: "success",
-              message: isHe
-                ? `התחברת לחדר הענן: ${cloudTrip.destination}!`
-                : `Connected to cloud room: ${cloudTrip.destination}!`
-            });
+    if (!isFirebaseReady()) return;
+
+    const unsub = subscribeToGlobalState((cloudData) => {
+      if (cloudData && Array.isArray(cloudData.trips) && cloudData.trips.length > 0) {
+        if (cloudData.lastUpdatedCloud !== lastRemoteTimestampRef.current) {
+          lastRemoteTimestampRef.current = cloudData.lastUpdatedCloud;
+          isApplyingRemoteSyncRef.current = true;
+          setTrips(cloudData.trips);
+          if (cloudData.activeTripId) {
+            setActiveTripId(cloudData.activeTripId);
           }
-        })
-        .catch((err) => console.error("Could not fetch room from cloud", err));
-    }
-  }, []);
-
-  // Real-time subscription to active trip in Firestore
-  useEffect(() => {
-    if (!isCloudReady || !activeTripId) return;
-
-    const unsub = subscribeToCloudTrip(
-      activeTripId,
-      (remoteTrip) => {
-        if (remoteTrip && remoteTrip.lastUpdatedCloud) {
-          setTrips((prev) =>
-            prev.map((t) => {
-              if (t.id === remoteTrip.id) {
-                if (t.lastUpdatedCloud !== remoteTrip.lastUpdatedCloud) {
-                  return remoteTrip;
-                }
-              }
-              return t;
-            })
-          );
+          setTimeout(() => {
+            isApplyingRemoteSyncRef.current = false;
+          }, 400);
         }
-      },
-      (err) => {
-        console.error("Cloud subscription error", err);
+      } else if (cloudData === null) {
+        // First-time database initialization with master state
+        syncGlobalStateToCloud(trips, activeTripId);
       }
-    );
+    }, (err) => {
+      console.warn("Global Firestore sync notice:", err);
+    });
 
     return () => {
       if (unsub) unsub();
     };
-  }, [activeTripId, isCloudReady]);
+  }, [isCloudReady]);
 
   // Current active trip
   const currentTrip = trips.find((t) => t.id === activeTripId) || trips[0];
@@ -265,23 +243,29 @@ export default function App() {
     }, 3500);
   };
 
-  // Helper to update current trip with cloud sync
+  // Helper to update current trip with real-time automatic cloud sync
   const updateCurrentTrip = (updater) => {
-    setTrips((prevTrips) =>
-      prevTrips.map((t) => {
+    setTrips((prevTrips) => {
+      const nextTrips = prevTrips.map((t) => {
         if (t.id === currentTrip.id) {
           const next = typeof updater === "function" ? updater(t) : { ...t, ...updater };
           next.lastUpdatedCloud = new Date().toISOString();
-          if (isFirebaseReady()) {
-            syncTripToCloud(next).catch((err) =>
-              console.error("Auto cloud sync error", err)
-            );
-          }
           return next;
         }
         return t;
-      })
-    );
+      });
+
+      // Automatically sync to Firestore cloud so all devices update live!
+      if (isFirebaseReady() && !isApplyingRemoteSyncRef.current) {
+        const stamp = new Date().toISOString();
+        lastRemoteTimestampRef.current = stamp;
+        syncGlobalStateToCloud(nextTrips, activeTripId).catch((err) =>
+          console.error("Auto cloud sync error", err)
+        );
+      }
+
+      return nextTrips;
+    });
   };
 
   // Language toggle
