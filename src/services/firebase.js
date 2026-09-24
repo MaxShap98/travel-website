@@ -10,10 +10,21 @@ import {
 
 const STORAGE_KEY_FIREBASE_CONFIG = "travel_planner_firebase_config_v1";
 
+// MaxVenture Firebase Project default config
+export const DEFAULT_FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCP4SPJ742fV3TkYv89Pt4uCinI9yfvYuU",
+  authDomain: "maxventure-6e3dd.firebaseapp.com",
+  projectId: "maxventure-6e3dd",
+  storageBucket: "maxventure-6e3dd.firebasestorage.app",
+  messagingSenderId: "66276104083",
+  appId: "1:66276104083:web:28c940e925f9bec7a9ba66",
+  measurementId: "G-BHBTE83J9H"
+};
+
 let dbInstance = null;
 let currentApp = null;
 
-// Read config from localStorage or Vite env
+// Read config from localStorage, Vite env, or embedded default
 export function getFirebaseConfig() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY_FIREBASE_CONFIG);
@@ -37,7 +48,8 @@ export function getFirebaseConfig() {
     };
   }
 
-  return null;
+  // Use MaxVenture project config as default
+  return DEFAULT_FIREBASE_CONFIG;
 }
 
 export function saveFirebaseConfig(config) {
