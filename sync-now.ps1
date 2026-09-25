@@ -2,7 +2,7 @@ param(
     [string]$Message = "Update travel planner"
 )
 
-$env:PATH = "C:\Program Files\Git\cmd;C:\Program Files\GitHub CLI;" + $env:PATH
+$env:PATH = "C:\Users\Shapi\AppData\Local\Programs\Git\cmd;C:\Program Files\Git\cmd;C:\Program Files\GitHub CLI;" + $env:PATH
 
 git config user.name "MaxShap98"
 git config user.email "MaxShap98@users.noreply.github.com"

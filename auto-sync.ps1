@@ -1,5 +1,5 @@
 # Auto Git Sync - Watches for file changes and pushes automatically to GitHub
-$env:PATH = "C:\Program Files\Git\cmd;C:\Program Files\GitHub CLI;" + $env:PATH
+$env:PATH = "C:\Users\Shapi\AppData\Local\Programs\Git\cmd;C:\Program Files\Git\cmd;C:\Program Files\GitHub CLI;" + $env:PATH
 
 $Remote = "origin"
 $Branch = "master"

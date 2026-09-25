@@ -194,9 +194,13 @@ export default function App() {
     }
   }, []);
 
-  // Refs to prevent circular sync echo
+  // Refs to prevent circular sync echo and stale closures
   const isApplyingRemoteSyncRef = useRef(false);
   const lastRemoteTimestampRef = useRef("");
+  const tripsRef = useRef(trips);
+  const activeTripIdRef = useRef(activeTripId);
+  tripsRef.current = trips;
+  activeTripIdRef.current = activeTripId;
 
   // Check cloud readiness
   useEffect(() => {
@@ -210,13 +214,15 @@ export default function App() {
 
     const unsub = subscribeToGlobalState((cloudData) => {
       if (cloudData && Array.isArray(cloudData.trips) && cloudData.trips.length > 0) {
-        // Protect local custom places: if local has places and cloud has 0 places, push local to cloud!
-        const localPlacesCount = trips.reduce((acc, t) => acc + (t.places?.length || 0), 0);
+        const currentLocal = tripsRef.current;
+        const currentActive = activeTripIdRef.current;
+        const localPlacesCount = currentLocal.reduce((acc, t) => acc + (t.places?.length || 0), 0);
         const cloudPlacesCount = cloudData.trips.reduce((acc, t) => acc + (t.places?.length || 0), 0);
 
+        // Protect local custom places: if local has places and cloud has 0 places, push local to cloud!
         if (localPlacesCount > 0 && cloudPlacesCount === 0) {
           console.log("Local has places but cloud has none. Pushing local to cloud...");
-          triggerCloudSync(trips, activeTripId);
+          triggerCloudSync(currentLocal, currentActive);
           return;
         }
 
@@ -234,7 +240,7 @@ export default function App() {
       } else {
         // Cloud is empty or missing: seed cloud with current state!
         console.log("Cloud has no trips. Initializing cloud from local trips...");
-        triggerCloudSync(trips, activeTripId);
+        triggerCloudSync(tripsRef.current, activeTripIdRef.current);
       }
     }, (err) => {
       console.warn("Global Firestore sync notice:", err);
@@ -256,7 +262,7 @@ export default function App() {
   };
 
   // Helper to push all trips & active ID to Firestore
-  const triggerCloudSync = (nextTrips, nextActiveId = activeTripId) => {
+  const triggerCloudSync = (nextTrips, nextActiveId = activeTripIdRef.current) => {
     if (isFirebaseReady() && !isApplyingRemoteSyncRef.current) {
       const stamp = new Date().toISOString();
       lastRemoteTimestampRef.current = stamp;
@@ -323,9 +329,10 @@ export default function App() {
 
   // Helper to update current trip with real-time automatic cloud sync
   const updateCurrentTrip = (updater) => {
+    const currentId = activeTripIdRef.current;
     setTrips((prevTrips) => {
       const nextTrips = prevTrips.map((t) => {
-        if (t.id === currentTrip.id) {
+        if (t.id === currentId) {
           const next = typeof updater === "function" ? updater(t) : { ...t, ...updater };
           next.lastUpdatedCloud = new Date().toISOString();
           return next;
@@ -333,7 +340,10 @@ export default function App() {
         return t;
       });
 
-      triggerCloudSync(nextTrips, activeTripId);
+      setTimeout(() => {
+        triggerCloudSync(nextTrips, currentId);
+      }, 50);
+
       return nextTrips;
     });
   };
