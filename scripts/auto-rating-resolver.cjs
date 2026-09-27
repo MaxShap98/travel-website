@@ -26,6 +26,7 @@ const db = getFirestore(app);
 
 // Comprehensive dictionary for instant 0ms resolution
 const KNOWN_RATINGS = {
+  "akira": { rating: 4.8, count: 1609, address: "Nikis 40, Syntagma, Athens 105 57", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Akira+Sushi+Bar+Athens" },
   "ovio": { rating: 4.5, count: 1680, address: "Apollonos 4, Syntagma, Athens 105 57", mapsUrl: "https://www.google.com/maps/search/?api=1&query=OVIO+Athens" },
   "granello": { rating: 4.6, count: 3530, address: "Perikleous 18, Syntagma, Athens 105 62", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Granello+Pizza+Italiana+Athens" },
   "bella napoli": { rating: 4.6, count: 1460, address: "Roumpesi 64, Neos Kosmos, Athens 117 44", mapsUrl: "https://www.google.com/maps/search/?api=1&query=La+Bella+Napoli+Neos+Kosmos+Athens" },
