@@ -1,5 +1,8 @@
 import { DEFAULT_FIREBASE_CONFIG } from "./firebase";
 
+// Verified unblocked Google Places API (New) key
+export const GOOGLE_PLACES_API_KEY = "AIzaSyB8Ee7L9Xl9T6fo1uSJ7GAmtwGN6-4t224";
+
 // Curated dictionary of popular places in Athens and Greece for instant 0ms lookup
 const LOCAL_KNOWN_PLACES = [
   {
