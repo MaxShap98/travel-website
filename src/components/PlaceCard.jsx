@@ -151,10 +151,18 @@ export function PlaceCard({
 
           {/* Location / Address / Link */}
           {place.location && (
-            <div className="flex items-center gap-1.5 text-xs text-slate-600">
-              <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <span className="truncate" dir="auto">{place.location}</span>
-            </div>
+            <a
+              href={mapsSearchUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-xs text-slate-600 hover:text-sky-600 transition-colors group/loc"
+              title={isHe ? "פתח ב-Google Maps" : "Open in Google Maps"}
+            >
+              <MapPin className="w-3.5 h-3.5 text-slate-400 group-hover/loc:text-sky-600 shrink-0 transition-colors" />
+              <span className="truncate underline decoration-slate-300 group-hover/loc:decoration-sky-500" dir="auto">
+                {place.location}
+              </span>
+            </a>
           )}
 
           {/* Personal Notes / Tips */}
@@ -178,10 +186,16 @@ export function PlaceCard({
                 </span>
               )}
               {place.rating && (
-                <span className="flex items-center gap-1 font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md">
+                <a
+                  href={mapsSearchUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 transition-colors px-2 py-0.5 rounded-md border border-amber-200/60"
+                  title={isHe ? `דירוג Google Maps: ${place.rating} ★ (לחץ לפתיחה)` : `Google Maps Rating: ${place.rating} ★`}
+                >
                   <Star className="w-3 h-3 fill-amber-400 text-amber-500" />
-                  {place.rating}
-                </span>
+                  <span>{place.rating}</span>
+                </a>
               )}
             </div>
           )}
