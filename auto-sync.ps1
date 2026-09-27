@@ -45,6 +45,7 @@ while ($true) {
         Write-Host "Staging, committing and pushing to GitHub..."
         git add -A
         git commit -m "Auto-sync: update $path ($timeStr)"
+        git pull --rebase $Remote $Branch
         git push $Remote $Branch
         Write-Host "[$timeStr] Push to GitHub completed successfully!"
         $lastSync = [DateTime]::UtcNow
