@@ -287,30 +287,50 @@ export function PlaceModal({
               )}
 
               {googleStatus?.type === "permission_denied" && (
-                <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 space-y-1.5 animate-fade-in">
+                <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 space-y-2 animate-fade-in">
                   <div className="font-bold flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-                    <span>{isHe ? "נדרשת הפעלה קצרה ב-Google Cloud" : "Enable Places API"}</span>
+                    <span>
+                      {googleStatus.isKeyBlocked
+                        ? isHe
+                          ? "נדרש שחרור הגבלת מפתח ב-Google Cloud"
+                          : "API Key Restriction Notice"
+                        : isHe
+                        ? "נדרשת הפעלה של Places API ב-Google Cloud"
+                        : "Enable Places API"}
+                    </span>
                   </div>
                   <p className="text-[11px] text-amber-800 leading-relaxed">
-                    {isHe
+                    {googleStatus.isKeyBlocked
+                      ? isHe
+                        ? "המפתח שלך ב-Firebase מוגבל כעת. כדי לאפשר משיכת דירוגים: לחץ על הקישור -> לחץ על המפתח -> בחר 'Don't restrict key' ולחץ שמור (Save):"
+                        : "Your Firebase API Key has restrictions. Open credentials -> click key -> select 'Don't restrict key' -> Save:"
+                      : isHe
                       ? "כדי שגוגל תאפשר משיכת דירוגים אוטומטית, לחץ על הקישור והפעל את Places API בפרויקט שלך (ללא עלות):"
                       : "To fetch live Google ratings automatically, enable Places API for your project (free):"}
                   </p>
                   <div className="flex flex-wrap items-center gap-2 pt-1">
                     <a
-                      href={googleStatus.activationUrl}
+                      href={googleStatus.credentialsUrl || googleStatus.activationUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs shadow-xs transition-colors"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs shadow-xs transition-colors"
                     >
-                      <span>{isHe ? "הפעל עכשיו ב-Google Cloud (5 שניות) ↗" : "Enable in Google Cloud ↗"}</span>
+                      <span>
+                        {googleStatus.isKeyBlocked
+                          ? isHe
+                            ? "🔑 פתח הגדרות מפתח ב-Google Cloud ↗"
+                            : "🔑 Open API Key Settings ↗"
+                          : isHe
+                          ? "הפעל עכשיו ב-Google Cloud ↗"
+                          : "Enable in Google Cloud ↗"}
+                      </span>
                     </a>
                     <a
                       href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${name} ${destination}`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-2.5 py-1 bg-white hover:bg-slate-50 border border-amber-300 text-amber-900 rounded-lg font-semibold text-xs transition-colors"
+                      className="px-2.5 py-1.5 bg-white hover:bg-slate-50 border border-amber-300 text-amber-900 rounded-lg font-semibold text-xs transition-colors"
                     >
                       {isHe ? "בדוק דירוג במפות ידנית ↗" : "Check Maps Manually ↗"}
                     </a>
