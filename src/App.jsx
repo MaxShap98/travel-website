@@ -844,6 +844,7 @@ export default function App() {
         onClose={() => setIsPlaceModalOpen(false)}
         onSavePlace={handleSavePlace}
         placeToEdit={placeToEdit}
+        destination={currentTrip?.destination || ""}
         currencySymbol={currentTrip?.currencySymbol || "€"}
         lang={lang}
       />
