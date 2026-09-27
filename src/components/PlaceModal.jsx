@@ -86,8 +86,66 @@ export function PlaceModal({
       setVibe("");
       setDressCode("");
       setAmenities("");
+      setGoogleStatus(null);
     }
-  }, [placeToEdit]);
+  }, [placeToEdit, isOpen]);
+
+  // Fetch rating & address automatically from Google Maps
+  const handleFetchGoogleRating = async (searchName = name) => {
+    const q = (searchName || name).trim();
+    if (!q) return;
+
+    setIsFetchingGoogle(true);
+    setGoogleStatus(null);
+
+    try {
+      const res = await fetchGooglePlaceInfo(q, destination);
+
+      if (res.success && res.rating) {
+        setRating(res.rating.toString());
+        if (!location.trim() && res.formattedAddress) {
+          setLocation(res.formattedAddress);
+        }
+        if (res.googleMapsUri) {
+          setMapsUrl(res.googleMapsUri);
+        }
+        if (res.priceLevel) {
+          if (res.priceLevel === "PRICE_LEVEL_INEXPENSIVE") setPriceRange("$");
+          else if (res.priceLevel === "PRICE_LEVEL_MODERATE") setPriceRange("$$");
+          else if (res.priceLevel === "PRICE_LEVEL_EXPENSIVE") setPriceRange("$$$");
+          else if (res.priceLevel === "PRICE_LEVEL_VERY_EXPENSIVE") setPriceRange("$$$$");
+        }
+        setGoogleStatus({
+          type: "success",
+          rating: res.rating,
+          count: res.userRatingCount,
+          address: res.formattedAddress,
+          mapsUrl: res.googleMapsUri
+        });
+      } else if (res.isPermissionDenied) {
+        setGoogleStatus({
+          type: "permission_denied",
+          activationUrl: res.activationUrl
+        });
+      } else if (res.notFound) {
+        setGoogleStatus({
+          type: "not_found"
+        });
+      } else {
+        setGoogleStatus({
+          type: "error",
+          message: res.error?.message || (isHe ? "לא נמצאו נתונים" : "No data found")
+        });
+      }
+    } catch (err) {
+      setGoogleStatus({
+        type: "error",
+        message: err.message
+      });
+    } finally {
+      setIsFetchingGoogle(false);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
