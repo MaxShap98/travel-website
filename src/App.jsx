@@ -693,6 +693,7 @@ export default function App() {
             <PlacesView
               places={currentTrip?.places || []}
               itinerary={currentTrip?.itinerary || []}
+              destination={currentTrip?.destination || ""}
               totalDays={currentTrip?.durationDays || 5}
               currencySymbol={currentTrip?.currencySymbol || "€"}
               searchQuery={searchQuery}
