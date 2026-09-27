@@ -12,6 +12,15 @@ const LOCAL_KNOWN_PLACES = [
     priceLevel: "PRICE_LEVEL_EXPENSIVE"
   },
   {
+    keywords: ["granello"],
+    displayName: "Granello - Pizza Italiana",
+    rating: 4.6,
+    userRatingCount: 3530,
+    formattedAddress: "Perikleous 18, Syntagma, Athens 105 62",
+    googleMapsUri: "https://www.google.com/maps/search/?api=1&query=Granello+Pizza+Italiana+Athens",
+    priceLevel: "PRICE_LEVEL_MODERATE"
+  },
+  {
     keywords: ["frankie"],
     displayName: "Frankie (Kolonaki)",
     rating: 4.6,
