@@ -337,11 +337,9 @@ export async function fetchGooglePlaceInfo(placeName, destination = "") {
       rating: localMatch.rating,
       userRatingCount: localMatch.userRatingCount,
       formattedAddress: localMatch.formattedAddress,
-      googleMapsUri: localMatch.googleMapsUri,
       priceLevel: localMatch.priceLevel
     };
-// Dedicated unblocked Google Places API (New) key
-export const GOOGLE_PLACES_API_KEY = "AIzaSyB8Ee7L9Xl9T6fo1uSJ7GAmtwGN6-4t224";
+  }
 
   // Tier 2: Live Google Places API (New) query
   const apiKey = GOOGLE_PLACES_API_KEY;
