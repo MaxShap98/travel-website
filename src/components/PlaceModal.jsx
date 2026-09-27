@@ -215,17 +215,120 @@ export function PlaceModal({
         <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="sm:col-span-2">
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                {isHe ? "שם המקום *" : "Place Name *"}
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-xs font-semibold text-slate-700">
+                  {isHe ? "שם המקום *" : "Place Name *"}
+                </label>
+                <button
+                  type="button"
+                  onClick={() => handleFetchGoogleRating()}
+                  disabled={isFetchingGoogle || !name.trim()}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 disabled:opacity-40 transition-colors cursor-pointer border border-sky-200/80 shadow-xs"
+                  title={isHe ? "חפש ומשוך דירוג, כתובת וקישור מ-Google Maps" : "Fetch rating and address from Google Maps"}
+                >
+                  {isFetchingGoogle ? (
+                    <>
+                      <span className="w-3 h-3 border-2 border-sky-600 border-t-transparent rounded-full animate-spin" />
+                      <span>{isHe ? "בודק בגוגל..." : "Checking..."}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                      <span>{isHe ? "משוך דירוג מ-Google 🌟" : "Fetch Google Rating 🌟"}</span>
+                    </>
+                  )}
+                </button>
+              </div>
               <input
                 type="text"
                 required
                 placeholder={isHe ? "למשל: מסעדת החוף, זארה, תצפית השקיעה..." : "e.g. Scorpios Beach Club"}
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (googleStatus) setGoogleStatus(null);
+                }}
+                onBlur={() => {
+                  if (name.trim().length >= 3 && !placeToEdit && !googleStatus) {
+                    handleFetchGoogleRating();
+                  }
+                }}
                 className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none"
               />
+
+              {/* Google Status Feedback Box */}
+              {googleStatus?.type === "success" && (
+                <div className="mt-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-xs text-emerald-900 animate-fade-in">
+                  <div className="flex items-center gap-2">
+                    <Star className="w-4 h-4 fill-amber-400 text-amber-500 shrink-0" />
+                    <span className="font-bold">
+                      {isHe ? `דירוג Google עודכן: ${googleStatus.rating} ★` : `Google Rating: ${googleStatus.rating} ★`}
+                    </span>
+                    {googleStatus.count > 0 && (
+                      <span className="text-slate-500 text-[11px]">
+                        ({googleStatus.count.toLocaleString()} {isHe ? "ביקורות" : "reviews"})
+                      </span>
+                    )}
+                  </div>
+                  {mapsUrl && (
+                    <a
+                      href={mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sky-700 font-bold hover:underline flex items-center gap-1 text-[11px]"
+                    >
+                      <span>{isHe ? "פתח במפה" : "Maps"}</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+                </div>
+              )}
+
+              {googleStatus?.type === "permission_denied" && (
+                <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 space-y-1.5 animate-fade-in">
+                  <div className="font-bold flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                    <span>{isHe ? "נדרשת הפעלה קצרה ב-Google Cloud" : "Enable Places API"}</span>
+                  </div>
+                  <p className="text-[11px] text-amber-800 leading-relaxed">
+                    {isHe
+                      ? "כדי שגוגל תאפשר משיכת דירוגים אוטומטית, לחץ על הקישור והפעל את Places API בפרויקט שלך (ללא עלות):"
+                      : "To fetch live Google ratings automatically, enable Places API for your project (free):"}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                    <a
+                      href={googleStatus.activationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs shadow-xs transition-colors"
+                    >
+                      <span>{isHe ? "הפעל עכשיו ב-Google Cloud (5 שניות) ↗" : "Enable in Google Cloud ↗"}</span>
+                    </a>
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${name} ${destination}`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-2.5 py-1 bg-white hover:bg-slate-50 border border-amber-300 text-amber-900 rounded-lg font-semibold text-xs transition-colors"
+                    >
+                      {isHe ? "בדוק דירוג במפות ידנית ↗" : "Check Maps Manually ↗"}
+                    </a>
+                  </div>
+                </div>
+              )}
+
+              {googleStatus?.type === "not_found" && (
+                <div className="mt-2 p-2 bg-slate-100 border border-slate-200 rounded-xl text-xs text-slate-600 flex items-center justify-between animate-fade-in">
+                  <span>{isHe ? "לא נמצא דירוג מדויק ב-Google. תוכל להזין ידנית." : "No Google match found. Enter manually."}</span>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${name} ${destination}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sky-600 font-semibold hover:underline text-[11px]"
+                  >
+                    {isHe ? "חפש במפות ↗" : "Search Maps ↗"}
+                  </a>
+                </div>
+              )}
             </div>
 
             <div>
