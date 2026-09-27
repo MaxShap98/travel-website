@@ -3,6 +3,15 @@ import { DEFAULT_FIREBASE_CONFIG } from "./firebase";
 // Curated dictionary of popular places in Athens and Greece for instant 0ms lookup
 const LOCAL_KNOWN_PLACES = [
   {
+    keywords: ["akira", "akira sushi"],
+    displayName: "Akira Sushi Bar",
+    rating: 4.8,
+    userRatingCount: 1609,
+    formattedAddress: "Nikis 40, Syntagma, Athens 105 57",
+    googleMapsUri: "https://www.google.com/maps/search/?api=1&query=Akira+Sushi+Bar+Athens",
+    priceLevel: "PRICE_LEVEL_MODERATE"
+  },
+  {
     keywords: ["ovio"],
     displayName: "OVIO",
     rating: 4.5,
