@@ -57,30 +57,37 @@ const KNOWN_RATINGS = {
   "ergon": { rating: 4.6, count: 1200, address: "Mitropoleos 27, Syntagma, Athens 105 57", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Ergon+Bakehouse+Athens" }
 };
 
-// Web search fallback for any unknown place in the world
+const PLACES_KEY = "AIzaSyB8Ee7L9Xl9T6fo1uSJ7GAmtwGN6-4t224";
+
+// Official Google Places API (New) query using the verified key
 async function fetchOnlineRating(placeName, destination) {
   const query = `${placeName} ${destination || ""}`.trim();
-  const url = "https://html.duckduckgo.com/html/?q=" + encodeURIComponent(query + " google maps reviews rating");
+  const url = "https://places.googleapis.com/v1/places:searchText";
 
-  return new Promise((resolve) => {
-    https.get(url, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" } }, (res) => {
-      let data = "";
-      res.on("data", (chunk) => (data += chunk));
-      res.on("end", () => {
-        const ratingMatch = data.match(/(\d\.\d)\s*(★|stars|out of 5|\/5)/i) || data.match(/Rating:\s*(\d\.\d)/i);
-        if (ratingMatch && ratingMatch[1]) {
-          const r = parseFloat(ratingMatch[1]);
-          if (r >= 3.0 && r <= 5.0) {
-            return resolve({
-              rating: r,
-              mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
-            });
-          }
-        }
-        resolve(null);
-      });
-    }).on("error", () => resolve(null));
-  });
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": PLACES_KEY,
+        "X-Goog-FieldMask": "places.displayName,places.rating,places.userRatingCount,places.formattedAddress,places.googleMapsUri,places.priceLevel"
+      },
+      body: JSON.stringify({ textQuery: query, languageCode: "he" })
+    });
+    const data = await res.json();
+    if (data.places && data.places.length > 0) {
+      const top = data.places[0];
+      return {
+        rating: top.rating ? parseFloat(top.rating) : null,
+        count: top.userRatingCount || 0,
+        address: top.formattedAddress || "",
+        mapsUrl: top.googleMapsUri || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
+      };
+    }
+  } catch (err) {
+    console.error("[AutoResolver] Google Places fetch error:", err);
+  }
+  return null;
 }
 
 let isProcessing = false;
