@@ -12,12 +12,48 @@ const LOCAL_KNOWN_PLACES = [
     priceLevel: "PRICE_LEVEL_EXPENSIVE"
   },
   {
+    keywords: ["bella napoli", "la bella napoli"],
+    displayName: "La Bella Napoli",
+    rating: 4.6,
+    userRatingCount: 1460,
+    formattedAddress: "Roumpesi 64, Neos Kosmos, Athens 117 44",
+    googleMapsUri: "https://www.google.com/maps/search/?api=1&query=La+Bella+Napoli+Neos+Kosmos+Athens",
+    priceLevel: "PRICE_LEVEL_MODERATE"
+  },
+  {
     keywords: ["granello"],
     displayName: "Granello - Pizza Italiana",
     rating: 4.6,
     userRatingCount: 3530,
     formattedAddress: "Perikleous 18, Syntagma, Athens 105 62",
     googleMapsUri: "https://www.google.com/maps/search/?api=1&query=Granello+Pizza+Italiana+Athens",
+    priceLevel: "PRICE_LEVEL_MODERATE"
+  },
+  {
+    keywords: ["smak", "סמאק"],
+    displayName: "Smak. - Greek Peinirli & Pizza",
+    rating: 4.7,
+    userRatingCount: 2200,
+    formattedAddress: "Romvis 21, Syntagma, Athens 105 60",
+    googleMapsUri: "https://www.google.com/maps/search/?api=1&query=Smak+Romvis+Athens",
+    priceLevel: "PRICE_LEVEL_INEXPENSIVE"
+  },
+  {
+    keywords: ["crust"],
+    displayName: "Crust Pizza Athens",
+    rating: 4.5,
+    userRatingCount: 3100,
+    formattedAddress: "Protogenous 13, Psirri, Athens 105 54",
+    googleMapsUri: "https://www.google.com/maps/search/?api=1&query=Crust+Psirri+Athens",
+    priceLevel: "PRICE_LEVEL_INEXPENSIVE"
+  },
+  {
+    keywords: ["tre sorelle"],
+    displayName: "Tre Sorelle Pizza",
+    rating: 4.5,
+    userRatingCount: 1800,
+    formattedAddress: "Archelaou 19, Pangrati, Athens 116 35",
+    googleMapsUri: "https://www.google.com/maps/search/?api=1&query=Tre+Sorelle+Athens",
     priceLevel: "PRICE_LEVEL_MODERATE"
   },
   {
