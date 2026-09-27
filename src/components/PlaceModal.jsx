@@ -71,7 +71,7 @@ export function PlaceModal({
       setDescription("");
       setStatus("Must Visit");
       setPriceRange("$$");
-      setRating("4.8");
+      setRating("");
       setCost(45);
       setLocation("");
       setBookingUrl("");
