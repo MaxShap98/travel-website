@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { X, MapPin, DollarSign, Star, Image, Link, Clock, Sparkles } from "lucide-react";
+import { X, MapPin, DollarSign, Star, Image, Link, Clock, Sparkles, ExternalLink } from "lucide-react";
+import { fetchGooglePlaceInfo } from "../services/googlePlaces";
 
 export function PlaceModal({
   isOpen,
   onClose,
   onSavePlace,
   placeToEdit = null,
+  destination = "",
   currencySymbol = "€",
   lang = "he"
 }) {
@@ -26,6 +28,10 @@ export function PlaceModal({
   const [mapsUrl, setMapsUrl] = useState("");
   const [image, setImage] = useState("");
   const [notes, setNotes] = useState("");
+
+  // Google rating auto-fetch states
+  const [isFetchingGoogle, setIsFetchingGoogle] = useState(false);
+  const [googleStatus, setGoogleStatus] = useState(null);
 
   // Category specific
   const [checkIn, setCheckIn] = useState("15:00");
