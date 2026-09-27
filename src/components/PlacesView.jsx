@@ -44,6 +44,7 @@ export function PlacesView({
   const [quickLocation, setQuickLocation] = useState("");
   const [quickNotes, setQuickNotes] = useState("");
   const [quickCost, setQuickCost] = useState("");
+  const [isQuickAdding, setIsQuickAdding] = useState(false);
 
   const categories = [
     { id: "all", label: isHe ? "כל המקומות" : "All Places", icon: Layers },
@@ -80,21 +81,54 @@ export function PlacesView({
     return map;
   }, [itinerary, places]);
 
-  // Handle Quick Add Submit
-  const handleQuickAddSubmit = (e) => {
+  // Handle Quick Add Submit with automatic Google Places lookup
+  const handleQuickAddSubmit = async (e) => {
     e.preventDefault();
-    if (!quickName.trim()) return;
+    const cleanName = quickName.trim();
+    if (!cleanName) return;
+
+    setIsQuickAdding(true);
+    let resolvedRating = null;
+    let resolvedAddress = quickLocation.trim();
+    let resolvedMapsUrl = "";
+    let resolvedPriceRange = "$$";
+
+    try {
+      const gInfo = await fetchGooglePlaceInfo(cleanName, destination);
+      if (gInfo && gInfo.rating) {
+        resolvedRating = gInfo.rating;
+        if (!resolvedAddress && gInfo.formattedAddress) {
+          resolvedAddress = gInfo.formattedAddress;
+        }
+        if (gInfo.googleMapsUri) {
+          resolvedMapsUrl = gInfo.googleMapsUri;
+        }
+        if (gInfo.priceLevel) {
+          if (gInfo.priceLevel === "PRICE_LEVEL_INEXPENSIVE") resolvedPriceRange = "$";
+          else if (gInfo.priceLevel === "PRICE_LEVEL_MODERATE") resolvedPriceRange = "$$";
+          else if (gInfo.priceLevel === "PRICE_LEVEL_EXPENSIVE") resolvedPriceRange = "$$$";
+          else if (gInfo.priceLevel === "PRICE_LEVEL_VERY_EXPENSIVE") resolvedPriceRange = "$$$$";
+        }
+      } else {
+        resolvedMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(cleanName + " " + (destination || ""))}`;
+      }
+    } catch (err) {
+      console.warn("Could not fetch Google place info in quick add:", err);
+    } finally {
+      setIsQuickAdding(false);
+    }
 
     const newPlace = {
       id: "place-" + Date.now(),
-      name: quickName.trim(),
+      name: cleanName,
       category: quickCategory,
-      location: quickLocation.trim(),
+      location: resolvedAddress,
+      mapsUrl: resolvedMapsUrl,
       notes: quickNotes.trim(),
       cost: parseFloat(quickCost) || 0,
       status: "Must Visit",
-      priceRange: "$$",
-      rating: 4.8
+      priceRange: resolvedPriceRange,
+      rating: resolvedRating !== null ? resolvedRating : 4.5
     };
 
     onSavePlace(newPlace);
