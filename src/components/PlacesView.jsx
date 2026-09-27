@@ -232,10 +232,20 @@ export function PlacesView({
             <div className="sm:col-span-2">
               <button
                 type="submit"
-                className="w-full h-full py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-sm font-bold shadow-md transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                disabled={isQuickAdding}
+                className="w-full h-full py-2.5 bg-sky-600 hover:bg-sky-700 disabled:bg-sky-400 text-white rounded-xl text-sm font-bold shadow-md transition-colors cursor-pointer flex items-center justify-center gap-1.5"
               >
-                <Plus className="w-4 h-4" />
-                <span>{isHe ? "הוסף מקום" : "Add Place"}</span>
+                {isQuickAdding ? (
+                  <>
+                    <Sparkles className="w-4 h-4 animate-spin text-amber-300" />
+                    <span>{isHe ? "בודק דירוג..." : "Fetching..."}</span>
+                  </>
+                ) : (
+                  <>
+                    <Plus className="w-4 h-4" />
+                    <span>{isHe ? "הוסף מקום" : "Add Place"}</span>
+                  </>
+                )}
               </button>
             </div>
           </div>
