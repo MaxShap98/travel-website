@@ -125,6 +125,8 @@ export function PlaceModal({
       } else if (res.isPermissionDenied) {
         setGoogleStatus({
           type: "permission_denied",
+          isKeyBlocked: res.isKeyBlocked,
+          credentialsUrl: res.credentialsUrl,
           activationUrl: res.activationUrl
         });
       } else if (res.notFound) {
