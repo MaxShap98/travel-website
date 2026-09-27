@@ -337,6 +337,7 @@ export async function fetchGooglePlaceInfo(placeName, destination = "") {
       rating: localMatch.rating,
       userRatingCount: localMatch.userRatingCount,
       formattedAddress: localMatch.formattedAddress,
+      googleMapsUri: localMatch.googleMapsUri,
       priceLevel: localMatch.priceLevel
     };
   }
