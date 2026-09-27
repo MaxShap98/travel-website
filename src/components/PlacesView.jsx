@@ -16,10 +16,12 @@ import {
   DollarSign
 } from "lucide-react";
 import { PlaceCard } from "./PlaceCard";
+import { fetchGooglePlaceInfo } from "../services/googlePlaces";
 
 export function PlacesView({
   places,
   itinerary = [],
+  destination = "",
   totalDays = 7,
   currencySymbol = "€",
   searchQuery = "",
