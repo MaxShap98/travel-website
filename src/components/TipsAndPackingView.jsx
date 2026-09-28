@@ -100,35 +100,37 @@ export function TipsAndPackingView({
           </div>
         </div>
 
-        {/* Add item inline form */}
-        <form onSubmit={handleAdd} className="p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap gap-2 text-xs">
-          <input
-            type="text"
-            required
-            placeholder={isHe ? "הוסף פריט חדש (למשל: קרם הגנה, שנורקל, מטען נייד...)" : "Add new item (e.g. Snorkeling mask, Power adapter...)"}
-            value={newItemText}
-            onChange={(e) => setNewItemText(e.target.value)}
-            className="flex-1 min-w-[220px] px-3 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500 focus:outline-none font-medium"
-          />
-          <select
-            value={newItemCategory}
-            onChange={(e) => setNewItemCategory(e.target.value)}
-            className="px-3 py-2 bg-white border border-slate-200 rounded-xl font-semibold focus:outline-none"
-          >
-            {categories.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl transition-colors flex items-center gap-1 cursor-pointer"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>{isHe ? "הוסף" : "Add"}</span>
-          </button>
-        </form>
+        {/* Add item inline form (Admin only) */}
+        {!isReadOnly && (
+          <form onSubmit={handleAdd} className="p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap gap-2 text-xs">
+            <input
+              type="text"
+              required
+              placeholder={isHe ? "הוסף פריט חדש (למשל: קרם הגנה, שנורקל, מטען נייד...)" : "Add new item (e.g. Snorkeling mask, Power adapter...)"}
+              value={newItemText}
+              onChange={(e) => setNewItemText(e.target.value)}
+              className="flex-1 min-w-[220px] px-3 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500 focus:outline-none font-medium"
+            />
+            <select
+              value={newItemCategory}
+              onChange={(e) => setNewItemCategory(e.target.value)}
+              className="px-3 py-2 bg-white border border-slate-200 rounded-xl font-semibold focus:outline-none"
+            >
+              {categories.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl transition-colors flex items-center gap-1 cursor-pointer"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>{isHe ? "הוסף" : "Add"}</span>
+            </button>
+          </form>
+        )}
 
         {/* Categories Grid */}
         <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
