@@ -18,7 +18,8 @@ export function ItineraryCardsView({
   lang = "he",
   onToggleComplete,
   onEdit,
-  onDelete
+  onDelete,
+  isReadOnly = false
 }) {
   const isHe = lang === "he";
 
