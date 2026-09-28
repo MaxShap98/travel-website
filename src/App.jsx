@@ -905,7 +905,7 @@ export default function App() {
 
       <CompanionsModal
         companions={currentTrip?.companions || []}
-        onUpdateCompanions={handleUpdateCompanions}
+        onUpdateCompanions={isReadOnly ? () => {} : handleUpdateCompanions}
         lang={lang}
         isOpen={isCompanionsModalOpen}
         onClose={() => setIsCompanionsModalOpen(false)}
