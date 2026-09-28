@@ -17,6 +17,7 @@ import { ExportShareModal } from "./components/ExportShareModal";
 import { FirebaseSyncModal } from "./components/FirebaseSyncModal";
 import { PrintView } from "./components/PrintView";
 import { Toast } from "./components/Toast";
+import { LoginPage } from "./components/LoginPage";
 import {
   isFirebaseReady,
   syncTripToCloud,
@@ -30,6 +31,7 @@ import {
 const STORAGE_KEY_TRIPS = "travel_planner_trips_v2";
 const STORAGE_KEY_ACTIVE_ID = "travel_planner_active_id_v2";
 const STORAGE_KEY_LANG = "travel_planner_lang_v2";
+const STORAGE_KEY_AUTH = "travel_planner_auth_user_v1";
 
 export default function App() {
   // Language state (defaulting to Hebrew since the user requested in Hebrew)
