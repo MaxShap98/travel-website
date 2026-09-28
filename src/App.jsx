@@ -281,8 +281,29 @@ export default function App() {
     }, 3500);
   };
 
+  const handleLogin = (userObj) => {
+    setCurrentUser(userObj);
+    try {
+      localStorage.setItem(STORAGE_KEY_AUTH, JSON.stringify(userObj));
+    } catch (e) {}
+    showToast({
+      type: "success",
+      message: isHe
+        ? `ברוך הבא! התחברת כ-${userObj.displayName}`
+        : `Welcome! Logged in as ${userObj.displayName}`
+    });
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    try {
+      localStorage.removeItem(STORAGE_KEY_AUTH);
+    } catch (e) {}
+  };
+
   // Helper to push all trips & active ID to Firestore
   const triggerCloudSync = (nextTrips, nextActiveId = activeTripIdRef.current) => {
+    if (isReadOnly) return; // View-only guest: never push modifications to cloud!
     if (isFirebaseReady() && !isApplyingRemoteSyncRef.current) {
       const stamp = new Date().toISOString();
       lastRemoteTimestampRef.current = stamp;
@@ -294,6 +315,13 @@ export default function App() {
 
   // Force Push Current State to Cloud
   const handleForceSyncToCloud = async () => {
+    if (isReadOnly) {
+      showToast({
+        type: "error",
+        message: isHe ? "חשבון אורח במצב צפייה בלבד - אין הרשאת עריכה." : "Guest account is view-only."
+      });
+      return false;
+    }
     try {
       const stamp = new Date().toISOString();
       lastRemoteTimestampRef.current = stamp;
