@@ -153,27 +153,42 @@ export function TipsAndPackingView({
                         : "bg-white border-slate-200/70 text-slate-700 hover:border-sky-300"
                     }`}
                   >
-                    <button
-                      onClick={() => onTogglePackingItem(it.id)}
-                      className="flex items-center gap-2.5 text-right flex-1 cursor-pointer"
-                    >
-                      {it.completed ? (
-                        <CheckSquare className="w-4 h-4 text-emerald-600 shrink-0" />
-                      ) : (
-                        <Square className="w-4 h-4 text-slate-300 group-hover:text-sky-500 shrink-0" />
-                      )}
-                      <span className={it.completed ? "line-through text-slate-400" : "font-medium"}>
-                        {it.item}
-                      </span>
-                    </button>
+                    {isReadOnly ? (
+                      <div className="flex items-center gap-2.5 text-right flex-1 select-none">
+                        {it.completed ? (
+                          <CheckSquare className="w-4 h-4 text-emerald-600 shrink-0" />
+                        ) : (
+                          <Square className="w-4 h-4 text-slate-300 shrink-0" />
+                        )}
+                        <span className={it.completed ? "line-through text-slate-400" : "font-medium"}>
+                          {it.item}
+                        </span>
+                      </div>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => onTogglePackingItem(it.id)}
+                          className="flex items-center gap-2.5 text-right flex-1 cursor-pointer"
+                        >
+                          {it.completed ? (
+                            <CheckSquare className="w-4 h-4 text-emerald-600 shrink-0" />
+                          ) : (
+                            <Square className="w-4 h-4 text-slate-300 group-hover:text-sky-500 shrink-0" />
+                          )}
+                          <span className={it.completed ? "line-through text-slate-400" : "font-medium"}>
+                            {it.item}
+                          </span>
+                        </button>
 
-                    <button
-                      onClick={() => onDeletePackingItem(it.id)}
-                      className="opacity-0 group-hover:opacity-100 p-1 text-slate-300 hover:text-rose-600 transition-opacity cursor-pointer"
-                      title={isHe ? "מחק פריט" : "Delete item"}
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                        <button
+                          onClick={() => onDeletePackingItem(it.id)}
+                          className="opacity-0 group-hover:opacity-100 p-1 text-slate-300 hover:text-rose-600 transition-opacity cursor-pointer"
+                          title={isHe ? "מחק פריט" : "Delete item"}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </>
+                    )}
                   </div>
                 ))}
               </div>
