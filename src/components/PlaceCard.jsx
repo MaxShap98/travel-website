@@ -110,14 +110,17 @@ export function PlaceCard({
           {/* Interactive Status Selector */}
           <div className="relative">
             <button
-              onClick={() => setShowStatusMenu(!showStatusMenu)}
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border transition-all cursor-pointer ${currentStatus.bg}`}
+              disabled={isReadOnly}
+              onClick={() => !isReadOnly && setShowStatusMenu(!showStatusMenu)}
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border transition-all ${
+                isReadOnly ? "cursor-default opacity-90" : "cursor-pointer"
+              } ${currentStatus.bg}`}
             >
               <span className={`w-2 h-2 rounded-full ${currentStatus.dot}`} />
               <span>{currentStatus.label}</span>
             </button>
 
-            {showStatusMenu && (
+            {!isReadOnly && showStatusMenu && (
               <div className="absolute right-0 top-8 z-20 w-36 bg-white rounded-xl shadow-xl border border-slate-100 py-1.5 animate-fade-in text-xs">
                 {Object.entries(statusStyles).map(([key, st]) => (
                   <button
