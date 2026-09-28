@@ -692,6 +692,11 @@ export default function App() {
     }
   };
 
+  // Authentication gate: show LoginPage before user can access dashboard
+  if (!currentUser) {
+    return <LoginPage onLogin={handleLogin} lang={lang} />;
+  }
+
   return (
     <div
       className={`min-h-screen bg-[#fbf9f5] text-slate-800 flex flex-col font-sans selection:bg-sky-200 ${
@@ -708,6 +713,8 @@ export default function App() {
         <Header
           trip={currentTrip}
           lang={lang}
+          currentUser={currentUser}
+          onLogout={handleLogout}
           isCloudSyncActive={isCloudReady}
           onToggleLang={handleToggleLang}
           onOpenDestinationModal={() => setIsDestinationModalOpen(true)}
@@ -736,6 +743,7 @@ export default function App() {
           }
           lang={lang}
           onOpenAddModal={handleNavbarQuickAdd}
+          isReadOnly={isReadOnly}
         />
 
         {/* Main Content */}
