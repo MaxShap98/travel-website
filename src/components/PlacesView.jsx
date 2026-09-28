@@ -32,7 +32,8 @@ export function PlacesView({
   onSavePlace,
   onOpenAddModal,
   onEditPlace,
-  onDeletePlace
+  onDeletePlace,
+  isReadOnly = false
 }) {
   const isHe = lang === "he";
   const [selectedCategory, setSelectedCategory] = useState("all");
