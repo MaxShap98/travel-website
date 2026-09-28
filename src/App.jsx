@@ -61,7 +61,7 @@ export default function App() {
     return null;
   });
 
-  const isReadOnly = currentUser?.role === "guest";
+  const isReadOnly = !currentUser || currentUser?.role !== "admin";
 
   // Load initial trips or create a clean custom trip
   const [trips, setTrips] = useState(() => {
