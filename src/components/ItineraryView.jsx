@@ -38,7 +38,8 @@ export function ItineraryView({
   onQuickAddActivity,
   onQuickSchedulePlace,
   onAddDay,
-  onRemoveDay
+  onRemoveDay,
+  isReadOnly = false
 }) {
   const isHe = lang === "he";
   const [viewMode, setViewMode] = useState("table"); // 'table' | 'cards'
