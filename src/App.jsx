@@ -377,6 +377,7 @@ export default function App() {
 
   // Helper to update current trip with real-time automatic cloud sync
   const updateCurrentTrip = (updater) => {
+    if (isReadOnly) return;
     const currentId = activeTripIdRef.current;
     setTrips((prevTrips) => {
       const nextTrips = prevTrips.map((t) => {
@@ -408,6 +409,7 @@ export default function App() {
 
   // 1. Start Fresh Blank Trip Handler
   const handleStartBlankTrip = () => {
+    if (isReadOnly) return;
     const destName = window.prompt(
       isHe
         ? "לאיזה יעד אתה מתכנן לטוס? (למשל: איטליה, לונדון, ברצלונה, יפן, תאילנד...)"
@@ -465,6 +467,7 @@ export default function App() {
 
   // 2. Clear Current Trip Places & Schedule
   const handleClearTrip = () => {
+    if (isReadOnly) return;
     if (
       window.confirm(
         isHe
