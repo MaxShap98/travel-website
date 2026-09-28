@@ -165,22 +165,24 @@ export function ItineraryView({
                         </div>
                       </div>
 
-                      {/* 1-Click Day Buttons */}
-                      <div className="flex items-center gap-1 shrink-0">
-                        <span className="text-[10px] text-slate-400 font-semibold">
-                          {isHe ? "שבץ ב:" : "Day:"}
-                        </span>
-                        {daysList.slice(0, 5).map((d) => (
-                          <button
-                            key={d}
-                            onClick={() => onQuickSchedulePlace(place, d)}
-                            className="px-1.5 py-0.5 bg-sky-50 hover:bg-sky-600 hover:text-white border border-sky-200 rounded font-bold text-[10px] transition-colors cursor-pointer"
-                            title={isHe ? `שבץ ביום ${d}` : `Assign to Day ${d}`}
-                          >
-                            {d}
-                          </button>
-                        ))}
-                      </div>
+                      {/* 1-Click Day Buttons (Admin only) */}
+                      {!isReadOnly && (
+                        <div className="flex items-center gap-1 shrink-0">
+                          <span className="text-[10px] text-slate-400 font-semibold">
+                            {isHe ? "שבץ ב:" : "Day:"}
+                          </span>
+                          {daysList.slice(0, 5).map((d) => (
+                            <button
+                              key={d}
+                              onClick={() => onQuickSchedulePlace(place, d)}
+                              className="px-1.5 py-0.5 bg-sky-50 hover:bg-sky-600 hover:text-white border border-sky-200 rounded font-bold text-[10px] transition-colors cursor-pointer"
+                              title={isHe ? `שבץ ביום ${d}` : `Assign to Day ${d}`}
+                            >
+                              {d}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
