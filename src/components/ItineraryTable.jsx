@@ -23,7 +23,8 @@ export function ItineraryTable({
   onMoveUp,
   onMoveDown,
   onEdit,
-  onDelete
+  onDelete,
+  isReadOnly = false
 }) {
   const isHe = lang === "he";
 
