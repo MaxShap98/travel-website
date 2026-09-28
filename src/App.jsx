@@ -762,14 +762,17 @@ export default function App() {
               onAddToItinerary={(place) => setPlaceToSchedule(place)}
               onSavePlace={handleSavePlace}
               onOpenAddModal={() => {
+                if (isReadOnly) return;
                 setPlaceToEdit(null);
                 setIsPlaceModalOpen(true);
               }}
               onEditPlace={(place) => {
+                if (isReadOnly) return;
                 setPlaceToEdit(place);
                 setIsPlaceModalOpen(true);
               }}
               onDeletePlace={handleDeletePlace}
+              isReadOnly={isReadOnly}
             />
           )}
 
@@ -785,6 +788,7 @@ export default function App() {
               onMoveUp={handleMoveUpItinerary}
               onMoveDown={handleMoveDownItinerary}
               onEditActivity={(activity) => {
+                if (isReadOnly) return;
                 setActivityToEdit(activity);
                 setIsActivityModalOpen(true);
               }}
@@ -793,6 +797,7 @@ export default function App() {
               onQuickSchedulePlace={handleQuickScheduleToDay}
               onAddDay={handleAddDay}
               onRemoveDay={handleRemoveDay}
+              isReadOnly={isReadOnly}
             />
           )}
 
@@ -804,6 +809,7 @@ export default function App() {
               onTogglePackingItem={handleTogglePackingItem}
               onAddPackingItem={handleAddPackingItem}
               onDeletePackingItem={handleDeletePackingItem}
+              isReadOnly={isReadOnly}
             />
           )}
 
