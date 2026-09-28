@@ -404,53 +404,55 @@ export function ItineraryTable({
                   </td>
 
                   {/* Actions (Reorder, Edit, Delete) */}
-                  <td className="py-2.5 px-3 text-center align-middle whitespace-nowrap no-print">
-                    <div className="flex items-center justify-center gap-1">
-                      <button
-                        disabled={index === 0}
-                        onClick={() => onMoveUp(index)}
-                        className={`p-1 rounded hover:bg-slate-100 transition-colors ${
-                          index === 0 ? "opacity-20 cursor-not-allowed" : "text-slate-400 hover:text-slate-800 cursor-pointer"
-                        }`}
-                        title={isHe ? "העלה למעלה" : "Move Up"}
-                      >
-                        <ArrowUp className="w-3.5 h-3.5" />
-                      </button>
+                  {!isReadOnly && (
+                    <td className="py-2.5 px-3 text-center align-middle whitespace-nowrap no-print">
+                      <div className="flex items-center justify-center gap-1">
+                        <button
+                          disabled={index === 0}
+                          onClick={() => onMoveUp(index)}
+                          className={`p-1 rounded hover:bg-slate-100 transition-colors ${
+                            index === 0 ? "opacity-20 cursor-not-allowed" : "text-slate-400 hover:text-slate-800 cursor-pointer"
+                          }`}
+                          title={isHe ? "העלה למעלה" : "Move Up"}
+                        >
+                          <ArrowUp className="w-3.5 h-3.5" />
+                        </button>
 
-                      <button
-                        disabled={index === items.length - 1}
-                        onClick={() => onMoveDown(index)}
-                        className={`p-1 rounded hover:bg-slate-100 transition-colors ${
-                          index === items.length - 1
-                            ? "opacity-20 cursor-not-allowed"
-                            : "text-slate-400 hover:text-slate-800 cursor-pointer"
-                        }`}
-                        title={isHe ? "הורד למטה" : "Move Down"}
-                      >
-                        <ArrowDown className="w-3.5 h-3.5" />
-                      </button>
+                        <button
+                          disabled={index === items.length - 1}
+                          onClick={() => onMoveDown(index)}
+                          className={`p-1 rounded hover:bg-slate-100 transition-colors ${
+                            index === items.length - 1
+                              ? "opacity-20 cursor-not-allowed"
+                              : "text-slate-400 hover:text-slate-800 cursor-pointer"
+                          }`}
+                          title={isHe ? "הורד למטה" : "Move Down"}
+                        >
+                          <ArrowDown className="w-3.5 h-3.5" />
+                        </button>
 
-                      <button
-                        onClick={() => onEdit(item)}
-                        className="p-1 text-slate-400 hover:text-sky-600 hover:bg-sky-50 rounded transition-colors cursor-pointer"
-                        title={isHe ? "ערוך" : "Edit"}
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
+                        <button
+                          onClick={() => onEdit(item)}
+                          className="p-1 text-slate-400 hover:text-sky-600 hover:bg-sky-50 rounded transition-colors cursor-pointer"
+                          title={isHe ? "ערוך" : "Edit"}
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
 
-                      <button
-                        onClick={() => {
-                          if (window.confirm(isHe ? `למחוק את "${item.activity}"?` : `Delete "${item.activity}"?`)) {
-                            onDelete(item.id);
-                          }
-                        }}
-                        className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors cursor-pointer"
-                        title={isHe ? "מחק" : "Delete"}
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </td>
+                        <button
+                          onClick={() => {
+                            if (window.confirm(isHe ? `למחוק את "${item.activity}"?` : `Delete "${item.activity}"?`)) {
+                              onDelete(item.id);
+                            }
+                          }}
+                          className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors cursor-pointer"
+                          title={isHe ? "מחק" : "Delete"}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </td>
+                  )}
                 </tr>
               );
             })}
