@@ -5,13 +5,8 @@ import {
   Eye,
   EyeOff,
   Plane,
-  ShieldCheck,
-  Compass,
   AlertCircle,
-  ArrowRight,
-  Sparkles,
-  CheckCircle2,
-  Users
+  ArrowRight
 } from "lucide-react";
 
 export function LoginPage({ onLogin, lang = "he" }) {
@@ -52,35 +47,11 @@ export function LoginPage({ onLogin, lang = "he" }) {
         setIsLoading(false);
         setError(
           isHe
-            ? "שם משתמש או סיסמה שגויים. בדוק את הפרטים ונסה שוב."
+            ? "שם משתמש או סיסמה שגויים. נסה שוב."
             : "Invalid username or password. Please try again."
         );
       }
     }, 250);
-  };
-
-  // Quick 1-click login helpers
-  const handleQuickLogin = (role) => {
-    setError("");
-    if (role === "admin") {
-      setUsername("admin");
-      setPassword("Aa123456");
-      onLogin({
-        username: "admin",
-        displayName: "מנהל ראשי",
-        role: "admin",
-        isReadOnly: false
-      });
-    } else {
-      setUsername("guest");
-      setPassword("123456");
-      onLogin({
-        username: "guest",
-        displayName: "אורח (צפייה בלבד)",
-        role: "guest",
-        isReadOnly: true
-      });
-    }
   };
 
   return (
@@ -97,7 +68,7 @@ export function LoginPage({ onLogin, lang = "he" }) {
       <div className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-8 relative z-10 flex flex-col animate-in fade-in zoom-in-95 duration-300">
         
         {/* Brand Header */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-7">
           <div className="inline-flex p-3.5 bg-gradient-to-tr from-sky-500 to-indigo-600 rounded-2xl shadow-lg shadow-sky-500/30 mb-3 ring-4 ring-white/10">
             <Plane className="w-8 h-8 text-white -rotate-45" />
           </div>
@@ -123,22 +94,22 @@ export function LoginPage({ onLogin, lang = "he" }) {
           </div>
         )}
 
-        {/* Credentials Form */}
+        {/* Credentials Form: Only Username and Password */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-bold text-sky-100 mb-1.5">
               {isHe ? "שם משתמש" : "Username"}
             </label>
             <div className="relative">
-              <User className="w-4 h-4 text-sky-300 absolute right-3.5 top-3.5 pointer-events-none" />
+              <User className={`w-4 h-4 text-sky-300 absolute ${isHe ? "right-3.5" : "left-3.5"} top-3.5 pointer-events-none`} />
               <input
                 type="text"
                 required
-                dir="ltr"
+                autoComplete="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="admin / guest"
-                className="w-full pr-10 pl-3.5 py-2.5 bg-white/10 hover:bg-white/15 focus:bg-white/20 border border-white/20 rounded-xl text-white placeholder-sky-200/40 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all"
+                placeholder={isHe ? "הזן שם משתמש" : "Enter username"}
+                className={`w-full ${isHe ? "pr-10 pl-3.5" : "pl-10 pr-3.5"} py-2.5 bg-white/10 hover:bg-white/15 focus:bg-white/20 border border-white/20 rounded-xl text-white placeholder-sky-200/40 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all`}
               />
             </div>
           </div>
@@ -148,20 +119,20 @@ export function LoginPage({ onLogin, lang = "he" }) {
               {isHe ? "סיסמה" : "Password"}
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-sky-300 absolute right-3.5 top-3.5 pointer-events-none" />
+              <Lock className={`w-4 h-4 text-sky-300 absolute ${isHe ? "right-3.5" : "left-3.5"} top-3.5 pointer-events-none`} />
               <input
                 type={showPassword ? "text" : "password"}
                 required
-                dir="ltr"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pr-10 pl-10 py-2.5 bg-white/10 hover:bg-white/15 focus:bg-white/20 border border-white/20 rounded-xl text-white placeholder-sky-200/40 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all"
+                className={`w-full ${isHe ? "pr-10 pl-10" : "pl-10 pr-10"} py-2.5 bg-white/10 hover:bg-white/15 focus:bg-white/20 border border-white/20 rounded-xl text-white placeholder-sky-200/40 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all`}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute left-3 top-3 text-sky-300/80 hover:text-white transition-colors cursor-pointer p-0.5"
+                className={`absolute ${isHe ? "left-3" : "right-3"} top-3 text-sky-300/80 hover:text-white transition-colors cursor-pointer p-0.5`}
                 tabIndex={-1}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -172,7 +143,7 @@ export function LoginPage({ onLogin, lang = "he" }) {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white rounded-xl text-sm font-extrabold shadow-lg shadow-sky-500/30 transition-all cursor-pointer flex items-center justify-center gap-2 mt-2 disabled:opacity-50"
+            className="w-full py-3 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white rounded-xl text-sm font-extrabold shadow-lg shadow-sky-500/30 transition-all cursor-pointer flex items-center justify-center gap-2 mt-4 disabled:opacity-50"
           >
             {isLoading ? (
               <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -185,61 +156,8 @@ export function LoginPage({ onLogin, lang = "he" }) {
           </button>
         </form>
 
-        {/* Divider */}
-        <div className="relative my-6 text-center">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-white/15" />
-          </div>
-          <span className="relative bg-slate-900/60 backdrop-blur-md px-3 py-0.5 text-[11px] font-bold text-sky-200/60 uppercase tracking-wider rounded-full border border-white/10">
-            {isHe ? "או כניסה מהירה בלחיצה" : "Or 1-Click Quick Access"}
-          </span>
-        </div>
-
-        {/* Quick Login Cards */}
-        <div className="grid grid-cols-2 gap-2.5">
-          {/* Admin Role Button */}
-          <button
-            type="button"
-            onClick={() => handleQuickLogin("admin")}
-            className="p-3 bg-gradient-to-br from-amber-500/20 to-amber-600/10 hover:from-amber-500/30 hover:to-amber-600/20 border border-amber-400/40 rounded-2xl text-right transition-all group cursor-pointer text-xs"
-          >
-            <div className="flex items-center justify-between mb-1">
-              <span className="p-1 bg-amber-400/20 text-amber-300 rounded-lg group-hover:scale-110 transition-transform">
-                👑
-              </span>
-              <span className="text-[10px] font-mono text-amber-200/80">Aa123456</span>
-            </div>
-            <div className="font-extrabold text-amber-200 group-hover:text-white">
-              {isHe ? "כניסת מנהל" : "Admin Login"}
-            </div>
-            <div className="text-[10px] text-amber-200/70">
-              {isHe ? "עריכה, הוספה ומחיקה" : "Full edit permissions"}
-            </div>
-          </button>
-
-          {/* Guest Role Button */}
-          <button
-            type="button"
-            onClick={() => handleQuickLogin("guest")}
-            className="p-3 bg-gradient-to-br from-sky-500/20 to-indigo-600/10 hover:from-sky-500/30 hover:to-indigo-600/20 border border-sky-400/40 rounded-2xl text-right transition-all group cursor-pointer text-xs"
-          >
-            <div className="flex items-center justify-between mb-1">
-              <span className="p-1 bg-sky-400/20 text-sky-300 rounded-lg group-hover:scale-110 transition-transform">
-                👀
-              </span>
-              <span className="text-[10px] font-mono text-sky-200/80">123456</span>
-            </div>
-            <div className="font-extrabold text-sky-200 group-hover:text-white">
-              {isHe ? "כניסת אורח" : "Guest Login"}
-            </div>
-            <div className="text-[10px] text-sky-200/70">
-              {isHe ? "צפייה בלבד (View Only)" : "View only permissions"}
-            </div>
-          </button>
-        </div>
-
-        {/* Footer info */}
-        <div className="text-center mt-5 text-[11px] text-sky-200/50">
+        {/* Footer */}
+        <div className="text-center mt-7 text-[11px] text-sky-200/40">
           MaxVenture &copy; {new Date().getFullYear()} • {isHe ? "כל הזכויות שמורות" : "All rights reserved"}
         </div>
       </div>
