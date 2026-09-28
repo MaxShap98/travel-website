@@ -380,6 +380,7 @@ export function PlacesView({
               onAddToItinerary={onAddToItinerary}
               onEdit={onEditPlace}
               onDelete={onDeletePlace}
+              isReadOnly={isReadOnly}
             />
           ))}
         </div>
