@@ -669,6 +669,7 @@ export default function App() {
   };
 
   const handleResetDefaults = () => {
+    if (isReadOnly) return;
     setTrips(initialTrips);
     setActiveTripId(initialTrips[0].id);
     triggerCloudSync(initialTrips, initialTrips[0].id);
@@ -683,6 +684,7 @@ export default function App() {
   };
 
   const handleNavbarQuickAdd = () => {
+    if (isReadOnly) return;
     if (activeTab === "itinerary") {
       setActivityToEdit(null);
       setIsActivityModalOpen(true);
