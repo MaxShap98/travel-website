@@ -834,13 +834,17 @@ export default function App() {
               <span>{isHe ? "כל השינויים נשמרים אוטומטית בדפדפן שלך" : "Saved locally in your browser"}</span>
             </div>
             <div className="flex items-center gap-4 text-slate-400">
-              <button
-                onClick={handleStartBlankTrip}
-                className="hover:text-slate-800 transition-colors font-semibold cursor-pointer"
-              >
-                {isHe ? "✨ התחל טיול נקי מאפס" : "Start Blank Trip"}
-              </button>
-              <span>·</span>
+              {!isReadOnly && (
+                <>
+                  <button
+                    onClick={handleStartBlankTrip}
+                    className="hover:text-slate-800 transition-colors font-semibold cursor-pointer"
+                  >
+                    {isHe ? "✨ התחל טיול נקי מאפס" : "Start Blank Trip"}
+                  </button>
+                  <span>·</span>
+                </>
+              )}
               <button
                 onClick={() => setIsExportModalOpen(true)}
                 className="hover:text-slate-800 transition-colors cursor-pointer"
@@ -866,12 +870,14 @@ export default function App() {
           });
         }}
         onCreateTrip={(newTrip) => {
+          if (isReadOnly) return;
           const updated = [newTrip, ...trips];
           setTrips(updated);
           setActiveTripId(newTrip.id);
           triggerCloudSync(updated, newTrip.id);
         }}
         onDeleteTrip={(id) => {
+          if (isReadOnly) return;
           if (trips.length <= 1) return;
           const rem = trips.filter((t) => t.id !== id);
           const nextActive = activeTripId === id ? rem[0].id : activeTripId;
