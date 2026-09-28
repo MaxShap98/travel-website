@@ -13,12 +13,17 @@ import {
   RotateCcw,
   Languages,
   Plus,
-  Cloud
+  Cloud,
+  LogOut,
+  ShieldCheck,
+  Eye
 } from "lucide-react";
 
 export function Header({
   trip,
   lang = "he",
+  currentUser,
+  onLogout,
   isCloudSyncActive = false,
   onToggleLang,
   onOpenDestinationModal,
@@ -34,6 +39,7 @@ export function Header({
   if (!trip) return null;
 
   const isHe = lang === "he";
+  const isGuest = currentUser?.role === "guest";
 
   return (
     <header className="relative bg-gradient-to-r from-sky-950 via-sky-900 to-indigo-950 text-white overflow-hidden shadow-xl border-b border-sky-800/40">
