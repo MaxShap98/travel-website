@@ -958,12 +958,13 @@ export default function App() {
         isOpen={isExportModalOpen}
         onClose={() => setIsExportModalOpen(false)}
         onImportData={(data) => {
+          if (isReadOnly) return;
           setTrips(data);
           const nextId = data.length > 0 ? data[0].id : activeTripId;
           if (data.length > 0) setActiveTripId(data[0].id);
           triggerCloudSync(data, nextId);
         }}
-        onResetDefaults={handleResetDefaults}
+        onResetDefaults={isReadOnly ? () => {} : handleResetDefaults}
         onPrint={handlePrint}
         onToast={showToast}
       />
