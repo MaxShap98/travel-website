@@ -107,17 +107,27 @@ export function ItineraryCardsView({
                   }`}
                 >
                   <div className="flex items-start gap-2.5 sm:gap-3 flex-1 min-w-0">
-                    <button
-                      onClick={() => onToggleComplete(item.id)}
-                      className="mt-0.5 text-slate-300 hover:text-sky-600 transition-colors cursor-pointer shrink-0"
-                      title={isHe ? "סמן כבוצע" : "Toggle Done"}
-                    >
-                      {item.completed ? (
-                        <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                      ) : (
-                        <Circle className="w-5 h-5 hover:stroke-sky-600" />
-                      )}
-                    </button>
+                    {isReadOnly ? (
+                      <span className="mt-0.5 text-slate-400 shrink-0">
+                        {item.completed ? (
+                          <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                        ) : (
+                          <Circle className="w-5 h-5 text-slate-300" />
+                        )}
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => onToggleComplete(item.id)}
+                        className="mt-0.5 text-slate-300 hover:text-sky-600 transition-colors cursor-pointer shrink-0"
+                        title={isHe ? "סמן כבוצע" : "Toggle Done"}
+                      >
+                        {item.completed ? (
+                          <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                        ) : (
+                          <Circle className="w-5 h-5 hover:stroke-sky-600" />
+                        )}
+                      </button>
+                    )}
 
                     <div className="space-y-1 min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
