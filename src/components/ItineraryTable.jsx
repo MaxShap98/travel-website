@@ -262,7 +262,9 @@ export function ItineraryTable({
               <th className="py-2.5 px-4">{isHe ? "כתובת / קישור" : "Location"}</th>
               <th className="py-2.5 px-3 w-28">{isHe ? "עלות / סטטוס" : "Cost"}</th>
               <th className="py-2.5 px-4 min-w-[180px]">{isHe ? "הערות" : "Notes"}</th>
-              <th className="py-2.5 px-3 w-24 text-center no-print">{isHe ? "פעולות" : "Actions"}</th>
+              {!isReadOnly && (
+                <th className="py-2.5 px-3 w-24 text-center no-print">{isHe ? "פעולות" : "Actions"}</th>
+              )}
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-xs">
