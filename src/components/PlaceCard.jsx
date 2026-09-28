@@ -218,38 +218,40 @@ export function PlaceCard({
 
       {/* Card Footer Actions */}
       <div className="p-3 bg-slate-50 border-t border-slate-100 space-y-2">
-        {/* Quick Day Scheduler Buttons */}
-        <div>
-          <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 mb-1.5">
-            <span>{isHe ? "📅 שבץ ישירות ביום:" : "📅 Assign to Day:"}</span>
-            <button
-              onClick={() => onAddToItinerary(place)}
-              className="text-sky-600 hover:text-sky-800 font-bold transition-colors cursor-pointer"
-            >
-              {isHe ? "+ שעה והערות" : "+ Custom Time"}
-            </button>
-          </div>
+        {/* Quick Day Scheduler Buttons (Admin only) */}
+        {!isReadOnly && (
+          <div>
+            <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 mb-1.5">
+              <span>{isHe ? "📅 שבץ ישירות ביום:" : "📅 Assign to Day:"}</span>
+              <button
+                onClick={() => onAddToItinerary(place)}
+                className="text-sky-600 hover:text-sky-800 font-bold transition-colors cursor-pointer"
+              >
+                {isHe ? "+ שעה והערות" : "+ Custom Time"}
+              </button>
+            </div>
 
-          <div className="flex items-center gap-1 overflow-x-auto pb-1 scrollbar-none">
-            {daysList.map((d) => {
-              const isScheduledHere = scheduledDays.includes(d);
-              return (
-                <button
-                  key={d}
-                  onClick={() => onQuickScheduleToDay(place, d)}
-                  className={`px-2 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
-                    isScheduledHere
-                      ? "bg-sky-600 text-white shadow-xs"
-                      : "bg-white border border-slate-200 text-slate-700 hover:bg-sky-50 hover:border-sky-300"
-                  }`}
-                  title={isHe ? `הוסף ליום ${d}` : `Add to Day ${d}`}
-                >
-                  {isHe ? `יום ${d}` : `Day ${d}`}
-                </button>
-              );
-            })}
+            <div className="flex items-center gap-1 overflow-x-auto pb-1 scrollbar-none">
+              {daysList.map((d) => {
+                const isScheduledHere = scheduledDays.includes(d);
+                return (
+                  <button
+                    key={d}
+                    onClick={() => onQuickScheduleToDay(place, d)}
+                    className={`px-2 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                      isScheduledHere
+                        ? "bg-sky-600 text-white shadow-xs"
+                        : "bg-white border border-slate-200 text-slate-700 hover:bg-sky-50 hover:border-sky-300"
+                    }`}
+                    title={isHe ? `הוסף ליום ${d}` : `Add to Day ${d}`}
+                  >
+                    {isHe ? `יום ${d}` : `Day ${d}`}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Links & Edit / Delete */}
         <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 text-xs">
@@ -266,27 +268,29 @@ export function PlaceCard({
             </a>
           </div>
 
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => onEdit(place)}
-              className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-white rounded-lg transition-colors cursor-pointer"
-              title={isHe ? "ערוך מקום" : "Edit place"}
-            >
-              <Edit2 className="w-3.5 h-3.5" />
-            </button>
+          {!isReadOnly && (
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => onEdit(place)}
+                className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-white rounded-lg transition-colors cursor-pointer"
+                title={isHe ? "ערוך מקום" : "Edit place"}
+              >
+                <Edit2 className="w-3.5 h-3.5" />
+              </button>
 
-            <button
-              onClick={() => {
-                if (window.confirm(isHe ? `למחוק את "${place.name}"?` : `Delete "${place.name}"?`)) {
-                  onDelete(place.id);
-                }
-              }}
-              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
-              title={isHe ? "מחק מקום" : "Delete place"}
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-            </button>
-          </div>
+              <button
+                onClick={() => {
+                  if (window.confirm(isHe ? `למחוק את "${place.name}"?` : `Delete "${place.name}"?`)) {
+                    onDelete(place.id);
+                  }
+                }}
+                className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                title={isHe ? "מחק מקום" : "Delete place"}
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
