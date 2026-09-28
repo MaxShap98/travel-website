@@ -19,7 +19,8 @@ export function TipsAndPackingView({
   onTogglePackingItem,
   onAddPackingItem,
   onDeletePackingItem,
-  lang = "he"
+  lang = "he",
+  isReadOnly = false
 }) {
   const isHe = lang === "he";
   const [newItemText, setNewItemText] = useState("");
