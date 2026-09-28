@@ -6,7 +6,8 @@ import {
   PieChart,
   Search,
   Plus,
-  X
+  X,
+  Eye
 } from "lucide-react";
 
 export function Navbar({
@@ -18,7 +19,8 @@ export function Navbar({
   itineraryCount,
   packingCount,
   lang = "he",
-  onOpenAddModal
+  onOpenAddModal,
+  isReadOnly = false
 }) {
   const isHe = lang === "he";
 
