@@ -46,17 +46,60 @@ export function Header({
       {/* Decorative gradient overlay */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.18),transparent_50%)] pointer-events-none" />
 
-      {/* Main App Title - Centered */}
-      <div className="border-b border-white/10 bg-black/25 backdrop-blur-md py-3 px-4 text-center relative z-20">
-        <div className="max-w-7xl mx-auto flex items-center justify-center">
+      {/* Main App Title - Centered with User Badge & Logout */}
+      <div className="border-b border-white/10 bg-black/25 backdrop-blur-md py-2.5 px-4 relative z-20">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          {/* Left: Language Toggle */}
+          <button
+            onClick={onToggleLang}
+            className="px-2.5 py-1 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer text-sky-200 hover:text-white"
+            title={isHe ? "החלף שפה לאנגלית" : "Switch to Hebrew"}
+          >
+            <Languages className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">{lang === "he" ? "English" : "עברית"}</span>
+          </button>
+
+          {/* Center: MaxVenture Brand */}
           <span
-            className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-[0.2em] uppercase select-none drop-shadow-sm"
+            className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-[0.2em] uppercase select-none drop-shadow-sm"
             style={{
               fontFamily: "'Montserrat', 'Outfit', sans-serif"
             }}
           >
             MAXVENTURE
           </span>
+
+          {/* Right: Current User Role Badge & Logout */}
+          <div className="flex items-center gap-2">
+            {currentUser && (
+              <>
+                {currentUser.role === "admin" ? (
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-amber-400/20 border border-amber-400/40 text-amber-200 shadow-xs">
+                    <span>👑</span>
+                    <span className="hidden sm:inline">{isHe ? "מנהל (עריכה מלאה)" : "Admin"}</span>
+                    <span className="sm:hidden">{isHe ? "מנהל" : "Admin"}</span>
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-sky-400/20 border border-sky-400/40 text-sky-200 shadow-xs">
+                    <Eye className="w-3.5 h-3.5 text-sky-300" />
+                    <span className="hidden sm:inline">{isHe ? "אורח (צפייה בלבד)" : "Guest (View Only)"}</span>
+                    <span className="sm:hidden">{isHe ? "אורח" : "Guest"}</span>
+                  </span>
+                )}
+
+                {onLogout && (
+                  <button
+                    onClick={onLogout}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-500/20 hover:bg-rose-500/30 border border-rose-400/40 text-rose-200 hover:text-white transition-all cursor-pointer shadow-xs"
+                    title={isHe ? "התנתק מהמערכת" : "Log out"}
+                  >
+                    <LogOut className="w-3 h-3" />
+                    <span>{isHe ? "התנתק" : "Logout"}</span>
+                  </button>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -76,25 +119,29 @@ export function Header({
                 <ChevronDown className="w-3.5 h-3.5 text-sky-300 group-hover:translate-y-0.5 transition-transform" />
               </button>
 
-              {/* Start Fresh Blank Trip Button */}
-              <button
-                onClick={onStartBlankTrip}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-300 hover:text-white text-xs font-bold transition-all cursor-pointer shadow-xs whitespace-nowrap shrink-0"
-                title={isHe ? "התחל טיול חדש ונקי ללא נתונים לדוגמה" : "Start a blank canvas trip"}
-              >
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{isHe ? "התחל טיול נקי מאפס" : "Start Blank Trip"}</span>
-              </button>
+              {/* Start Fresh Blank Trip Button (Admin only) */}
+              {!isGuest && (
+                <button
+                  onClick={onStartBlankTrip}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-300 hover:text-white text-xs font-bold transition-all cursor-pointer shadow-xs whitespace-nowrap shrink-0"
+                  title={isHe ? "התחל טיול חדש ונקי ללא נתונים לדוגמה" : "Start a blank canvas trip"}
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>{isHe ? "התחל טיול נקי מאפס" : "Start Blank Trip"}</span>
+                </button>
+              )}
 
-              {/* Clear Current Trip Places & Schedule */}
-              <button
-                onClick={onClearTrip}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/10 hover:bg-rose-500/20 hover:border-rose-400/40 text-slate-300 hover:text-rose-300 text-xs font-semibold transition-all cursor-pointer whitespace-nowrap shrink-0"
-                title={isHe ? "נקה את כל המקומות והלו״ז של הטיול הנוכחי" : "Clear all places & schedule"}
-              >
-                <RotateCcw className="w-3 h-3" />
-                <span>{isHe ? "נקה לוח" : "Clear Board"}</span>
-              </button>
+              {/* Clear Current Trip Places & Schedule (Admin only) */}
+              {!isGuest && (
+                <button
+                  onClick={onClearTrip}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/10 hover:bg-rose-500/20 hover:border-rose-400/40 text-slate-300 hover:text-rose-300 text-xs font-semibold transition-all cursor-pointer whitespace-nowrap shrink-0"
+                  title={isHe ? "נקה את כל המקומות והלו״ז של הטיול הנוכחי" : "Clear all places & schedule"}
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  <span>{isHe ? "נקה לוח" : "Clear Board"}</span>
+                </button>
+              )}
             </div>
 
             <div className="flex items-baseline gap-3">
