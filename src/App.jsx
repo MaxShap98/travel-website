@@ -45,6 +45,24 @@ export default function App() {
 
   const isHe = lang === "he";
 
+  // Authentication state (admin vs guest)
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem(STORAGE_KEY_AUTH);
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        if (parsed && (parsed.role === "admin" || parsed.role === "guest")) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.error("Failed to load saved auth user", e);
+    }
+    return null;
+  });
+
+  const isReadOnly = currentUser?.role === "guest";
+
   // Load initial trips or create a clean custom trip
   const [trips, setTrips] = useState(() => {
     try {
