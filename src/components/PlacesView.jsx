@@ -163,17 +163,18 @@ export function PlacesView({
 
   return (
     <div className="space-y-6">
-      {/* ⚡ Dedicated Quick-Add Place Bar */}
-      <div className="bg-white rounded-2xl border-2 border-sky-300/80 shadow-md p-4 sm:p-5">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <span className="p-1.5 bg-sky-500 text-white rounded-lg shadow-xs">
-              <Sparkles className="w-4 h-4" />
-            </span>
-            <h3 className="font-extrabold text-base text-slate-800">
-              {isHe ? "הוספה מהירה של מקום שאהבת" : "Quick Add a Place to Your List"}
-            </h3>
-          </div>
+      {/* ⚡ Dedicated Quick-Add Place Bar (Admin only) */}
+      {!isReadOnly ? (
+        <div className="bg-white rounded-2xl border-2 border-sky-300/80 shadow-md p-4 sm:p-5">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="p-1.5 bg-sky-500 text-white rounded-lg shadow-xs">
+                <Sparkles className="w-4 h-4" />
+              </span>
+              <h3 className="font-extrabold text-base text-slate-800">
+                {isHe ? "הוספה מהירה של מקום שאהבת" : "Quick Add a Place to Your List"}
+              </h3>
+            </div>
           <span className="text-xs text-slate-400 font-medium hidden sm:inline">
             {isHe
               ? "שמור מקומות מאינסטגרם, גוגל מפות או בלוגים ושבץ אותם בקלות בלו״ז"
