@@ -233,25 +233,27 @@ export function ItineraryView({
             );
           })}
 
-          {/* Adjust Days Count Buttons */}
-          <div className="flex items-center gap-1 pl-2 border-l border-slate-200">
-            <button
-              onClick={onAddDay}
-              className="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs rounded-xl border border-emerald-200 transition-colors cursor-pointer whitespace-nowrap"
-              title={isHe ? "הוסף יום נוסף לטיול" : "Add extra day"}
-            >
-              + {isHe ? "יום" : "Day"}
-            </button>
-            {totalDays > 1 && (
+          {/* Adjust Days Count Buttons (Admin only) */}
+          {!isReadOnly && (
+            <div className="flex items-center gap-1 pl-2 border-l border-slate-200">
               <button
-                onClick={onRemoveDay}
-                className="px-2 py-1.5 bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 font-bold text-xs rounded-xl transition-colors cursor-pointer"
-                title={isHe ? "הסר את היום האחרון" : "Remove last day"}
+                onClick={onAddDay}
+                className="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs rounded-xl border border-emerald-200 transition-colors cursor-pointer whitespace-nowrap"
+                title={isHe ? "הוסף יום נוסף לטיול" : "Add extra day"}
               >
-                -
+                + {isHe ? "יום" : "Day"}
               </button>
-            )}
-          </div>
+              {totalDays > 1 && (
+                <button
+                  onClick={onRemoveDay}
+                  className="px-2 py-1.5 bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 font-bold text-xs rounded-xl transition-colors cursor-pointer"
+                  title={isHe ? "הסר את היום האחרון" : "Remove last day"}
+                >
+                  -
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
         {/* View Switcher: Table vs Cards */}
