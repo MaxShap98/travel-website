@@ -289,17 +289,27 @@ export function ItineraryTable({
                 >
                   {/* Done Checkbox */}
                   <td className="py-2.5 px-3 text-center align-middle">
-                    <button
-                      onClick={() => onToggleComplete(item.id)}
-                      className="cursor-pointer text-slate-300 hover:text-sky-600 transition-colors p-1"
-                      title={item.completed ? "Mark uncompleted" : "Mark completed"}
-                    >
-                      {item.completed ? (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                      ) : (
-                        <Circle className="w-4 h-4 hover:stroke-sky-600" />
-                      )}
-                    </button>
+                    {isReadOnly ? (
+                      <span className="p-1 inline-flex text-slate-400">
+                        {item.completed ? (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                        ) : (
+                          <Circle className="w-4 h-4 text-slate-300" />
+                        )}
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => onToggleComplete(item.id)}
+                        className="cursor-pointer text-slate-300 hover:text-sky-600 transition-colors p-1"
+                        title={item.completed ? "Mark uncompleted" : "Mark completed"}
+                      >
+                        {item.completed ? (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                        ) : (
+                          <Circle className="w-4 h-4 hover:stroke-sky-600" />
+                        )}
+                      </button>
+                    )}
                   </td>
 
                   {/* Day / Date */}
