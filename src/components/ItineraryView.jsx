@@ -299,61 +299,76 @@ export function ItineraryView({
                 </span>
               </div>
 
-              {/* Inline Input to add activity to this day */}
-              <form
-                onSubmit={(e) => handleInlineAdd(dayNum, e)}
-                className="flex items-center gap-2 flex-1 max-w-xl"
-              >
-                <input
-                  type="text"
-                  dir="auto"
-                  value={dayInputs[dayNum] || ""}
-                  onChange={(e) =>
-                    setDayInputs({ ...dayInputs, [dayNum]: e.target.value })
-                  }
-                  placeholder={
-                    isHe
-                      ? `+ הוסף פעילות ליום ${dayNum} (לחץ Enter)...`
-                      : `+ Add activity to Day ${dayNum} (press Enter)...`
-                  }
-                  className="flex-1 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"
-                />
-
-                <select
-                  value={dayPeriods[dayNum] || "Morning"}
-                  onChange={(e) =>
-                    setDayPeriods({ ...dayPeriods, [dayNum]: e.target.value })
-                  }
-                  className="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 focus:outline-none cursor-pointer"
+              {/* Inline Input to add activity to this day (Admin only) */}
+              {!isReadOnly && (
+                <form
+                  onSubmit={(e) => handleInlineAdd(dayNum, e)}
+                  className="flex items-center gap-2 flex-1 max-w-xl"
                 >
-                  <option value="Morning">🌅 {isHe ? "בוקר" : "Morning"}</option>
-                  <option value="Afternoon">☀️ {isHe ? "צהריים" : "Afternoon"}</option>
-                  <option value="Evening">🌇 {isHe ? "ערב" : "Evening"}</option>
-                  <option value="Night">🌙 {isHe ? "לילה" : "Night"}</option>
-                </select>
+                  <input
+                    type="text"
+                    dir="auto"
+                    value={dayInputs[dayNum] || ""}
+                    onChange={(e) =>
+                      setDayInputs({ ...dayInputs, [dayNum]: e.target.value })
+                    }
+                    placeholder={
+                      isHe
+                        ? `+ הוסף פעילות ליום ${dayNum} (לחץ Enter)...`
+                        : `+ Add activity to Day ${dayNum} (press Enter)...`
+                    }
+                    className="flex-1 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"
+                  />
 
-                <button
-                  type="submit"
-                  className="px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer shrink-0"
-                >
-                  {isHe ? "הוסף" : "Add"}
-                </button>
-              </form>
+                  <select
+                    value={dayPeriods[dayNum] || "Morning"}
+                    onChange={(e) =>
+                      setDayPeriods({ ...dayPeriods, [dayNum]: e.target.value })
+                    }
+                    className="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 focus:outline-none cursor-pointer"
+                  >
+                    <option value="Morning">🌅 {isHe ? "בוקר" : "Morning"}</option>
+                    <option value="Afternoon">☀️ {isHe ? "צהריים" : "Afternoon"}</option>
+                    <option value="Evening">🌇 {isHe ? "ערב" : "Evening"}</option>
+                    <option value="Night">🌙 {isHe ? "לילה" : "Night"}</option>
+                  </select>
+
+                  <button
+                    type="submit"
+                    className="px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer shrink-0"
+                  >
+                    {isHe ? "הוסף" : "Add"}
+                  </button>
+                </form>
+              )}
             </div>
 
             {/* Activities for this Day */}
             <div className="pt-3">
               {itinerary.filter((i) => i.dayNumber === dayNum).length > 0 ? (
-                <ItineraryTable
-                  items={itinerary.filter((i) => i.dayNumber === dayNum)}
-                  currencySymbol={currencySymbol}
-                  lang={lang}
-                  onToggleComplete={onToggleComplete}
-                  onMoveUp={onMoveUp}
-                  onMoveDown={onMoveDown}
-                  onEdit={onEditActivity}
-                  onDelete={onDeleteActivity}
-                />
+                viewMode === "cards" ? (
+                  <ItineraryCardsView
+                    items={itinerary.filter((i) => i.dayNumber === dayNum)}
+                    currencySymbol={currencySymbol}
+                    lang={lang}
+                    onToggleComplete={onToggleComplete}
+                    onEdit={onEditActivity}
+                    onDelete={onDeleteActivity}
+                    isReadOnly={isReadOnly}
+                  />
+                ) : (
+                  <ItineraryTable
+                    items={itinerary.filter((i) => i.dayNumber === dayNum)}
+                    currencySymbol={currencySymbol}
+                    lang={lang}
+                    onToggleComplete={onToggleComplete}
+                    onMoveUp={onMoveUp}
+                    onMoveDown={onMoveDown}
+                    onEdit={onEditActivity}
+                    onDelete={onDeleteActivity}
+                    isReadOnly={isReadOnly}
+                  />
+                )
               ) : (
                 <div className="text-center py-6 text-slate-400 text-xs border border-dashed border-slate-200 rounded-xl">
                   {isHe
