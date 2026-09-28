@@ -281,6 +281,21 @@ export function PlacesView({
           </div>
         </form>
       </div>
+    ) : (
+      <div className="bg-sky-50/80 border border-sky-200/80 rounded-2xl p-3.5 flex items-center justify-between text-xs text-sky-900 shadow-xs">
+        <div className="flex items-center gap-2.5">
+          <span className="text-lg">👀</span>
+          <div>
+            <span className="font-extrabold">{isHe ? "מצב צפייה בלבד (אורח)" : "View Only Mode (Guest)"}</span>
+            <p className="text-sky-700/90 text-[11px] mt-0.5">
+              {isHe
+                ? "באפשרותך לעיין בכל המקומות, הדירוגים, הכתובות ולפתוח קישורי Google Maps. עריכה שמורה למנהל."
+                : "You can view all places, ratings, addresses and Google Maps links. Editing is reserved for Admin."}
+            </p>
+          </div>
+        </div>
+      </div>
+    )}
 
       {/* Category Pills Navigation */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
