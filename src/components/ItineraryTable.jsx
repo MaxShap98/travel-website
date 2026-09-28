@@ -114,17 +114,27 @@ export function ItineraryTable({
             >
               {/* Header: Done + Day/Period + Title */}
               <div className="flex items-start gap-2.5">
-                <button
-                  onClick={() => onToggleComplete(item.id)}
-                  className="mt-0.5 text-slate-300 hover:text-sky-600 transition-colors p-1 cursor-pointer shrink-0"
-                  title={item.completed ? "Mark uncompleted" : "Mark completed"}
-                >
-                  {item.completed ? (
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                  ) : (
-                    <Circle className="w-5 h-5 hover:stroke-sky-600" />
-                  )}
-                </button>
+                {isReadOnly ? (
+                  <span className="mt-0.5 text-slate-400 p-1 shrink-0">
+                    {item.completed ? (
+                      <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                    ) : (
+                      <Circle className="w-5 h-5 text-slate-300" />
+                    )}
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => onToggleComplete(item.id)}
+                    className="mt-0.5 text-slate-300 hover:text-sky-600 transition-colors p-1 cursor-pointer shrink-0"
+                    title={item.completed ? "Mark uncompleted" : "Mark completed"}
+                  >
+                    {item.completed ? (
+                      <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                    ) : (
+                      <Circle className="w-5 h-5 hover:stroke-sky-600" />
+                    )}
+                  </button>
+                )}
 
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-1.5 mb-1">
