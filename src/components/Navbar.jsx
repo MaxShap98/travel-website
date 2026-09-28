@@ -110,22 +110,29 @@ export function Navbar({
               )}
             </div>
 
-            {/* Quick Add Button */}
-            <button
-              onClick={onOpenAddModal}
-              className="flex items-center gap-1.5 px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-colors cursor-pointer shrink-0"
-            >
-              <Plus className="w-4 h-4 text-sky-400" />
-              <span>
-                {activeTab === "itinerary"
-                  ? isHe
-                    ? "הוסף פעילות ללו״ז"
-                    : "Add Activity"
-                  : isHe
-                  ? "הוסף מקום"
-                  : "Add Place"}
+            {/* Quick Add Button or Read Only Badge */}
+            {isReadOnly ? (
+              <span className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-bold border border-slate-200 select-none shrink-0 shadow-xs">
+                <Eye className="w-3.5 h-3.5 text-slate-500" />
+                <span>{isHe ? "מצב צפייה בלבד" : "View Only"}</span>
               </span>
-            </button>
+            ) : (
+              <button
+                onClick={onOpenAddModal}
+                className="flex items-center gap-1.5 px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-colors cursor-pointer shrink-0"
+              >
+                <Plus className="w-4 h-4 text-sky-400" />
+                <span>
+                  {activeTab === "itinerary"
+                    ? isHe
+                      ? "הוסף פעילות ללו״ז"
+                      : "Add Activity"
+                    : isHe
+                    ? "הוסף מקום"
+                    : "Add Place"}
+                </span>
+              </button>
+            )}
           </div>
         </div>
       </div>

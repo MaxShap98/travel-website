@@ -28,7 +28,8 @@ export function PlaceCard({
   onQuickScheduleToDay,
   onAddToItinerary,
   onEdit,
-  onDelete
+  onDelete,
+  isReadOnly = false
 }) {
   const isHe = lang === "he";
   const [showStatusMenu, setShowStatusMenu] = useState(false);
