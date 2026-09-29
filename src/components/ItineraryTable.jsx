@@ -124,9 +124,7 @@ export function ItineraryTable({
         {items.map((item, index) => {
           const periodStyle = periodStyles[item.period] || periodStyles.Morning;
           const PeriodIcon = periodStyle.icon;
-          const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-            `${item.activity} ${item.location || ""}`
-          )}`;
+          const mapsUrl = resolveItemMapsUrl(item);
           const bStatus = bookingStyles[item.bookingStatus] || {
             class: "bg-slate-100 text-slate-700",
             label: item.bookingStatus
@@ -187,24 +185,33 @@ export function ItineraryTable({
                       item.completed ? "line-through text-slate-400" : ""
                     }`}
                   >
-                    {item.activity}
+                    <a
+                      href={mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-sky-600 transition-colors inline-flex items-center gap-1"
+                      title={isHe ? "פתח מיקום ב-Google Maps" : "Open location in Google Maps"}
+                    >
+                      <span>{item.activity}</span>
+                      <ExternalLink className="w-3 h-3 text-sky-500 shrink-0 inline opacity-70" />
+                    </a>
                   </h4>
 
-                  {item.location && (
-                    <div className="flex items-center gap-1 text-[11px] text-slate-500 mt-0.5">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                      <span className="truncate">{item.location}</span>
-                      <a
-                        href={mapsUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sky-600 p-0.5"
-                        title="Google Maps"
-                      >
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    </div>
-                  )}
+                  <div className="mt-1">
+                    <a
+                      href={mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[11px] font-medium text-sky-700 bg-sky-50 hover:bg-sky-100 px-2 py-0.5 rounded-md border border-sky-200/60 transition-colors max-w-fit"
+                      title={isHe ? "פתח מיקום ב-Google Maps" : "Open in Google Maps"}
+                    >
+                      <MapPin className="w-3 h-3 text-sky-600 shrink-0" />
+                      <span className="truncate max-w-[190px]" dir="auto">
+                        {item.location || item.activity}
+                      </span>
+                      <ExternalLink className="w-2.5 h-2.5 text-sky-500 shrink-0" />
+                    </a>
+                  </div>
 
                   {item.notes && (
                     <p className="text-[11px] text-slate-600 bg-slate-50 p-1.5 rounded border border-slate-100 mt-1" dir="auto">
