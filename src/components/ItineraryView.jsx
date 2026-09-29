@@ -53,8 +53,9 @@ export function ItineraryView({
   const totalDays = trip.durationDays || 5;
   const daysList = Array.from({ length: totalDays }, (_, i) => i + 1);
 
-  // Filtered itinerary
+  // Filtered and deduplicated itinerary
   const filteredItinerary = useMemo(() => {
+    const seen = new Set();
     return itinerary.filter((item) => {
       if (selectedDay !== "all" && item.dayNumber !== parseInt(selectedDay)) {
         return false;
@@ -66,6 +67,10 @@ export function ItineraryView({
         const mNote = item.notes?.toLowerCase().includes(q);
         if (!mAct && !mLoc && !mNote) return false;
       }
+      // Guarantee no duplicate activities per day
+      const key = (item.linkedPlaceId || (item.activity || "").trim().toLowerCase()) + "_d_" + item.dayNumber;
+      if (seen.has(key)) return false;
+      seen.add(key);
       return true;
     });
   }, [itinerary, selectedDay, searchQuery]);
