@@ -127,7 +127,7 @@ export function PlacesView({
       mapsUrl: resolvedMapsUrl,
       notes: quickNotes.trim(),
       cost: parseFloat(quickCost) || 0,
-      status: "Must Visit",
+      status: "Unset",
       priceRange: resolvedPriceRange,
       rating: resolvedRating !== null ? resolvedRating : 4.5
     };
