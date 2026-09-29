@@ -222,7 +222,7 @@ export function ItineraryCardsView({
                       </div>
 
                       {item.notes && (
-                        <p className="text-[11px] sm:text-xs text-slate-600 bg-slate-50 p-2 rounded-lg border border-slate-100 max-w-xl">
+                        <p className={`text-[11px] sm:text-xs text-slate-600 bg-slate-50 p-2 rounded-lg border border-slate-100 max-w-xl ${isHe ? "text-right" : "text-left"}`} dir={isHe ? "rtl" : "ltr"}>
                           💡 {item.notes}
                         </p>
                       )}
