@@ -87,6 +87,18 @@ export function LoginPage({ onLogin, lang = "he", timeoutNotice = false }) {
           </p>
         </div>
 
+        {/* Inactivity Timeout Notification */}
+        {timeoutNotice && !dismissedNotice && !error && (
+          <div className="mb-4 p-3 bg-amber-500/20 border border-amber-500/40 rounded-xl flex items-center gap-2.5 text-amber-200 text-xs font-semibold animate-in fade-in duration-300">
+            <Clock className="w-4 h-4 text-amber-300 shrink-0" />
+            <span>
+              {isHe
+                ? "נותקת מהמערכת עקב חוסר פעילות במשך 10 דקות ⏱️"
+                : "Logged out automatically due to 10 minutes of inactivity ⏱️"}
+            </span>
+          </div>
+        )}
+
         {/* Error notification */}
         {error && (
           <div className="mb-4 p-3 bg-rose-500/20 border border-rose-500/40 rounded-xl flex items-center gap-2.5 text-rose-200 text-xs font-semibold animate-shake">
