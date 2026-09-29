@@ -122,7 +122,7 @@ export function PlaceCard({
             </button>
 
             {!isReadOnly && showStatusMenu && (
-              <div className="absolute right-0 top-8 z-20 w-36 bg-white rounded-xl shadow-xl border border-slate-100 py-1.5 animate-fade-in text-xs">
+              <div className="absolute start-0 top-8 z-20 w-36 bg-white rounded-xl shadow-xl border border-slate-100 py-1.5 animate-fade-in text-xs">
                 {Object.entries(statusStyles).map(([key, st]) => (
                   <button
                     key={key}
@@ -130,7 +130,7 @@ export function PlaceCard({
                       onStatusChange(place.id, key);
                       setShowStatusMenu(false);
                     }}
-                    className="w-full text-left px-3 py-1.5 font-semibold text-slate-700 hover:bg-slate-100 flex items-center gap-2 cursor-pointer"
+                    className="w-full text-start px-3 py-1.5 font-semibold text-slate-700 hover:bg-slate-100 flex items-center gap-2 cursor-pointer"
                   >
                     <span className={`w-2 h-2 rounded-full ${st.dot}`} />
                     <span>{st.label}</span>
