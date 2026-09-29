@@ -349,9 +349,7 @@ export function PlacesView({
                   ? "הכל"
                   : "All"
                 : st === "Unset"
-                ? isHe
-                  ? "טרם הוגדר"
-                  : "Unset"
+                ? (isHe ? "סטטוס" : "Status")
                 : st === "Must Visit"
                 ? isHe
                   ? "חובה"
