@@ -229,7 +229,7 @@ export function PlaceCard({
       </div>
 
       {/* Card Footer Actions */}
-      <div className="p-3 bg-slate-50 border-t border-slate-100 space-y-2">
+      <div className="p-3 bg-slate-50 border-t border-slate-100 space-y-2 rounded-b-2xl">
         {/* Quick Day Scheduler Buttons (Admin only) */}
         {!isReadOnly && (
           <div>
