@@ -296,7 +296,11 @@ export default function App() {
         if (cloudData.lastUpdatedCloud !== lastRemoteTimestampRef.current) {
           lastRemoteTimestampRef.current = cloudData.lastUpdatedCloud;
           isApplyingRemoteSyncRef.current = true;
-          setTrips(cloudData.trips);
+          const cleanedTrips = (cloudData.trips || []).map((t) => ({
+            ...t,
+            itinerary: deduplicateItinerary(t.itinerary || [])
+          }));
+          setTrips(cleanedTrips);
           if (cloudData.activeTripId) {
             setActiveTripId(cloudData.activeTripId);
           }
@@ -317,6 +321,22 @@ export default function App() {
       if (unsub) unsub();
     };
   }, [isCloudReady]);
+
+  // Automatic self-healing: deduplicate any existing trips on load
+  useEffect(() => {
+    setTrips((prevTrips) => {
+      let changed = false;
+      const cleaned = prevTrips.map((trip) => {
+        const deduped = deduplicateItinerary(trip.itinerary || []);
+        if (deduped.length !== (trip.itinerary || []).length) {
+          changed = true;
+          return { ...trip, itinerary: deduped };
+        }
+        return trip;
+      });
+      return changed ? cleaned : prevTrips;
+    });
+  }, []);
 
   // Current active trip
   const currentTrip = trips.find((t) => t.id === activeTripId) || trips[0];
