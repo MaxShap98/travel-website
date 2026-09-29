@@ -464,16 +464,15 @@ export function ItineraryView({
                   <span className="w-7 h-7 rounded-xl bg-sky-600 text-white font-extrabold text-xs flex items-center justify-center">
                     {dayNum}
                   </span>
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-extrabold text-base text-slate-900">
-                      {isHe ? `יום ${dayNum}` : `Day ${dayNum}`}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h4 className="font-extrabold text-base sm:text-lg text-slate-900">
+                      <span>{isHe ? `יום ${dayNum}` : `Day ${dayNum}`}</span>
+                      {dInfo && (
+                        <span className="text-sky-600 mr-1.5 font-bold text-sm sm:text-base">
+                          – {dInfo.displayHeadline}
+                        </span>
+                      )}
                     </h4>
-                    {dInfo && (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-sky-50 text-sky-700 border border-sky-100/80 text-xs font-bold">
-                        <span>📅</span>
-                        <span>{dInfo.combinedWithDay}</span>
-                      </span>
-                    )}
                   </div>
                   <span className="text-xs text-slate-400 font-medium">
                     ({dayActivities.length} {isHe ? "פעילויות" : "activities"})
