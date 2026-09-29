@@ -243,7 +243,11 @@ export function PlaceCard({
                         ? "bg-sky-600 text-white shadow-xs"
                         : "bg-white border border-slate-200 text-slate-700 hover:bg-sky-50 hover:border-sky-300"
                     }`}
-                    title={isHe ? `הוסף ליום ${d}` : `Add to Day ${d}`}
+                    title={
+                      isScheduledHere
+                        ? (isHe ? `משובץ ביום ${d} - לחץ להסרה מהלו״ז` : `Scheduled on Day ${d} - Click to remove`)
+                        : (isHe ? `שבץ ביום ${d}` : `Assign to Day ${d}`)
+                    }
                   >
                     {isHe ? `יום ${d}` : `Day ${d}`}
                   </button>
