@@ -482,6 +482,8 @@ export function ItineraryView({
                     currencySymbol={currencySymbol}
                     lang={lang}
                     onToggleComplete={onToggleComplete}
+                    onMoveUp={onMoveUp}
+                    onMoveDown={onMoveDown}
                     onEdit={onEditActivity}
                     onDelete={onDeleteActivity}
                     isReadOnly={isReadOnly}
