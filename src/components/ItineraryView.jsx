@@ -17,7 +17,8 @@ import {
   Clock,
   Trash2,
   Edit2,
-  Layers
+  Layers,
+  ExternalLink
 } from "lucide-react";
 import { ItineraryTable } from "./ItineraryTable";
 import { ItineraryCardsView } from "./ItineraryCardsView";
