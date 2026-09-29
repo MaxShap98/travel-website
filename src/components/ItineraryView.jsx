@@ -171,6 +171,38 @@ export function ItineraryView({
   const totalCount = itinerary.length;
   const progressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
+  const getDayMapsUrl = (dayActivities) => {
+    if (!dayActivities || dayActivities.length === 0) return null;
+    const dest = trip?.destination || "";
+
+    const getItemQuery = (item) => {
+      if (item.linkedPlaceId) {
+        const p = places.find((x) => x.id === item.linkedPlaceId);
+        if (p?.location) return `${p.name} ${p.location}`;
+        if (p?.name) return `${p.name} ${dest}`;
+      }
+      return `${item.activity || ""} ${item.location || ""} ${dest}`.trim();
+    };
+
+    if (dayActivities.length === 1) {
+      const q = getItemQuery(dayActivities[0]);
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+    }
+
+    const origin = getItemQuery(dayActivities[0]);
+    const destination = getItemQuery(dayActivities[dayActivities.length - 1]);
+    const waypoints = dayActivities
+      .slice(1, -1)
+      .map(getItemQuery)
+      .filter(Boolean);
+
+    let url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
+    if (waypoints.length > 0) {
+      url += `&waypoints=${waypoints.map(encodeURIComponent).join("%7C")}`;
+    }
+    return url;
+  };
+
   return (
     <div className="space-y-6">
       {/* 📦 Saved Places Bank / Pool for Easy Assembling */}
