@@ -790,24 +790,78 @@ export default function App() {
     }));
   };
 
-  const handleMoveUpItinerary = (index) => {
-    if (index <= 0) return;
+  const handleMoveUpItinerary = (target) => {
     updateCurrentTrip((prev) => {
       const list = [...(prev.itinerary || [])];
-      const temp = list[index];
-      list[index] = list[index - 1];
-      list[index - 1] = temp;
+      if (list.length <= 1) return prev;
+
+      let currentItemIndex = -1;
+      if (typeof target === "string") {
+        currentItemIndex = list.findIndex((it) => it.id === target);
+      } else if (target && typeof target === "object" && target.id) {
+        currentItemIndex = list.findIndex((it) => it.id === target.id);
+      } else if (typeof target === "number" && target >= 0 && target < list.length) {
+        currentItemIndex = target;
+      }
+
+      if (currentItemIndex < 0 || currentItemIndex >= list.length) return prev;
+
+      const currentItem = list[currentItemIndex];
+      const targetDay = Number(currentItem.dayNumber);
+
+      // Find previous item belonging to the SAME day
+      let prevSameDayIndex = -1;
+      for (let i = currentItemIndex - 1; i >= 0; i--) {
+        if (Number(list[i].dayNumber) === targetDay) {
+          prevSameDayIndex = i;
+          break;
+        }
+      }
+
+      if (prevSameDayIndex === -1) return prev;
+
+      const temp = list[currentItemIndex];
+      list[currentItemIndex] = list[prevSameDayIndex];
+      list[prevSameDayIndex] = temp;
+
       return { ...prev, itinerary: list };
     });
   };
 
-  const handleMoveDownItinerary = (index) => {
+  const handleMoveDownItinerary = (target) => {
     updateCurrentTrip((prev) => {
       const list = [...(prev.itinerary || [])];
-      if (index >= list.length - 1) return prev;
-      const temp = list[index];
-      list[index] = list[index + 1];
-      list[index + 1] = temp;
+      if (list.length <= 1) return prev;
+
+      let currentItemIndex = -1;
+      if (typeof target === "string") {
+        currentItemIndex = list.findIndex((it) => it.id === target);
+      } else if (target && typeof target === "object" && target.id) {
+        currentItemIndex = list.findIndex((it) => it.id === target.id);
+      } else if (typeof target === "number" && target >= 0 && target < list.length) {
+        currentItemIndex = target;
+      }
+
+      if (currentItemIndex < 0 || currentItemIndex >= list.length) return prev;
+
+      const currentItem = list[currentItemIndex];
+      const targetDay = Number(currentItem.dayNumber);
+
+      // Find next item belonging to the SAME day
+      let nextSameDayIndex = -1;
+      for (let i = currentItemIndex + 1; i < list.length; i++) {
+        if (Number(list[i].dayNumber) === targetDay) {
+          nextSameDayIndex = i;
+          break;
+        }
+      }
+
+      if (nextSameDayIndex === -1) return prev;
+
+      const temp = list[currentItemIndex];
+      list[currentItemIndex] = list[nextSameDayIndex];
+      list[nextSameDayIndex] = temp;
+
       return { ...prev, itinerary: list };
     });
   };
