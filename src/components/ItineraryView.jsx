@@ -373,6 +373,7 @@ export function ItineraryView({
           {daysList.map((d) => {
             const count = itinerary.filter((i) => i.dayNumber === d).length;
             const isSel = selectedDay === d.toString();
+            const dInfo = getDayDateInfo(trip, d, lang);
             return (
               <button
                 key={d}
@@ -384,6 +385,11 @@ export function ItineraryView({
                 }`}
               >
                 <span>{isHe ? `יום ${d}` : `Day ${d}`}</span>
+                {dInfo && (
+                  <span className={`text-[10px] font-semibold ${isSel ? "text-sky-100" : "text-slate-400"}`}>
+                    {dInfo.combinedShort}
+                  </span>
+                )}
                 {count > 0 && (
                   <span
                     className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
