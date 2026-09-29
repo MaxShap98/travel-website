@@ -205,7 +205,7 @@ export function ItineraryView({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" dir={isHe ? "rtl" : "ltr"}>
       {/* 📦 Saved Places Bank / Pool for Easy Assembling */}
       {places.length > 0 && (
         <div className="bg-white rounded-2xl border border-sky-200 shadow-xs overflow-hidden">
