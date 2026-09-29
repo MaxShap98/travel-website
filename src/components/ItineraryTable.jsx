@@ -14,9 +14,11 @@ import {
   ExternalLink,
   Tag
 } from "lucide-react";
+import { getDayDateInfo } from "../utils/dateUtils";
 
 export function ItineraryTable({
   items,
+  trip,
   places = [],
   destination = "",
   currencySymbol = "€",
