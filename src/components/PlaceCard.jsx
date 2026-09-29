@@ -59,9 +59,9 @@ export function PlaceCard({
 
   const statusStyles = {
     Unset: {
-      bg: "bg-slate-100/90 text-slate-600 border-slate-300 ring-slate-400/20 hover:bg-slate-200/70",
+      bg: "bg-slate-100 text-slate-700 border-slate-300 ring-slate-400/20 hover:bg-slate-200/80",
       dot: "bg-slate-400",
-      label: isHe ? "טרם הוגדר" : "Unset"
+      label: "סטטוס"
     },
     "Must Visit": {
       bg: "bg-emerald-50 text-emerald-700 border-emerald-300 ring-emerald-400/30",
@@ -98,10 +98,14 @@ export function PlaceCard({
   const daysList = Array.from({ length: totalDays }, (_, i) => i + 1);
 
   return (
-    <div className="group bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-lg hover:border-sky-300 transition-all duration-200 overflow-hidden flex flex-col justify-between">
+    <div
+      className={`group bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-lg hover:border-sky-300 transition-all duration-200 flex flex-col justify-between relative ${
+        showStatusMenu ? "z-30" : "z-1"
+      }`}
+    >
       <div>
         {/* Card Header Bar */}
-        <div className="p-4 bg-gradient-to-r from-slate-50 to-sky-50/50 border-b border-slate-100 flex items-center justify-between gap-2">
+        <div className="p-4 bg-gradient-to-r from-slate-50 to-sky-50/50 border-b border-slate-100 flex items-center justify-between gap-2 rounded-t-2xl">
           {/* Category Tag */}
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 text-xs font-bold">
             <CategoryIcon className="w-3.5 h-3.5 text-sky-600" />
@@ -116,27 +120,34 @@ export function PlaceCard({
               className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border transition-all ${
                 isReadOnly ? "cursor-default opacity-90" : "cursor-pointer"
               } ${currentStatus.bg}`}
+              title={isHe ? "לחץ לשינוי סטטוס" : "Click to change status"}
             >
               <span className={`w-2 h-2 rounded-full ${currentStatus.dot}`} />
               <span>{currentStatus.label}</span>
             </button>
 
             {!isReadOnly && showStatusMenu && (
-              <div className="absolute start-0 top-8 z-20 w-36 bg-white rounded-xl shadow-xl border border-slate-100 py-1.5 animate-fade-in text-xs">
-                {Object.entries(statusStyles).map(([key, st]) => (
-                  <button
-                    key={key}
-                    onClick={() => {
-                      onStatusChange(place.id, key);
-                      setShowStatusMenu(false);
-                    }}
-                    className="w-full text-start px-3 py-1.5 font-semibold text-slate-700 hover:bg-slate-100 flex items-center gap-2 cursor-pointer"
-                  >
-                    <span className={`w-2 h-2 rounded-full ${st.dot}`} />
-                    <span>{st.label}</span>
-                  </button>
-                ))}
-              </div>
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowStatusMenu(false)}
+                />
+                <div className="absolute top-full mt-1.5 start-0 z-50 w-36 bg-white rounded-xl shadow-2xl border border-slate-200 py-1.5 animate-fade-in text-xs ring-1 ring-black/5">
+                  {Object.entries(statusStyles).map(([key, st]) => (
+                    <button
+                      key={key}
+                      onClick={() => {
+                        onStatusChange(place.id, key);
+                        setShowStatusMenu(false);
+                      }}
+                      className="w-full text-start px-3 py-1.5 font-semibold text-slate-700 hover:bg-slate-100 flex items-center gap-2 cursor-pointer transition-colors"
+                    >
+                      <span className={`w-2 h-2 rounded-full ${st.dot}`} />
+                      <span>{st.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </>
             )}
           </div>
         </div>
