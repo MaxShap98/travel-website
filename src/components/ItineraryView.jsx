@@ -452,21 +452,32 @@ export function ItineraryView({
       </div>
 
       {/* ⚡ Inline Quick Activity Adders for Selected Day or All Days */}
-      {(selectedDay !== "all" ? [parseInt(selectedDay)] : daysList).map((dayNum) => (
-        <div key={dayNum} className="space-y-3">
-          {/* Day Section Card */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
-              <div className="flex items-center gap-2.5 flex-wrap">
-                <span className="w-7 h-7 rounded-xl bg-sky-600 text-white font-extrabold text-xs flex items-center justify-center">
-                  {dayNum}
-                </span>
-                <h4 className="font-extrabold text-base text-slate-900">
-                  {isHe ? `יום ${dayNum}` : `Day ${dayNum}`}
-                </h4>
-                <span className="text-xs text-slate-400 font-medium">
-                  ({itinerary.filter((i) => i.dayNumber === dayNum).length} {isHe ? "פעילויות" : "activities"})
-                </span>
+      {(selectedDay !== "all" ? [parseInt(selectedDay)] : daysList).map((dayNum) => {
+        const dInfo = getDayDateInfo(trip, dayNum, lang);
+        const dayActivities = itinerary.filter((i) => i.dayNumber === dayNum);
+        return (
+          <div key={dayNum} className="space-y-3">
+            {/* Day Section Card */}
+            <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
+                <div className="flex items-center gap-2.5 flex-wrap">
+                  <span className="w-7 h-7 rounded-xl bg-sky-600 text-white font-extrabold text-xs flex items-center justify-center">
+                    {dayNum}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-extrabold text-base text-slate-900">
+                      {isHe ? `יום ${dayNum}` : `Day ${dayNum}`}
+                    </h4>
+                    {dInfo && (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-sky-50 text-sky-700 border border-sky-100/80 text-xs font-bold">
+                        <span>📅</span>
+                        <span>{dInfo.combinedWithDay}</span>
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-xs text-slate-400 font-medium">
+                    ({dayActivities.length} {isHe ? "פעילויות" : "activities"})
+                  </span>
 
                 {/* 🗺️ Open Day Route / Map in Google Maps */}
                 {itinerary.filter((i) => i.dayNumber === dayNum).length > 0 && (
