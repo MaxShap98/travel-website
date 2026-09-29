@@ -800,7 +800,13 @@ export default function App() {
 
   // Authentication gate: show LoginPage before user can access dashboard
   if (!currentUser) {
-    return <LoginPage onLogin={handleLogin} lang={lang} />;
+    return (
+      <LoginPage
+        onLogin={handleLogin}
+        lang={lang}
+        timeoutNotice={logoutReason === "inactivity"}
+      />
+    );
   }
 
   return (
