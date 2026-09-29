@@ -17,6 +17,8 @@ import {
 
 export function ItineraryTable({
   items,
+  places = [],
+  destination = "",
   currencySymbol = "€",
   lang = "he",
   onToggleComplete,
@@ -27,6 +29,31 @@ export function ItineraryTable({
   isReadOnly = false
 }) {
   const isHe = lang === "he";
+
+  const resolveItemMapsUrl = (item) => {
+    if (item.mapsUrl) return item.mapsUrl;
+
+    if (item.linkedPlaceId && places.length > 0) {
+      const p = places.find((x) => x.id === item.linkedPlaceId);
+      if (p?.mapsUrl) return p.mapsUrl;
+      if (p?.location) {
+        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${p.name} ${p.location}`)}`;
+      }
+    }
+
+    if (places.length > 0) {
+      const p = places.find(
+        (x) => x.name && item.activity && x.name.trim().toLowerCase() === item.activity.trim().toLowerCase()
+      );
+      if (p?.mapsUrl) return p.mapsUrl;
+      if (p?.location) {
+        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${p.name} ${p.location}`)}`;
+      }
+    }
+
+    const query = `${item.activity || ""} ${item.location || ""} ${destination || ""}`.trim();
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+  };
 
   const periodStyles = {
     Morning: {
