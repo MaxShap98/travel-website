@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { ItineraryTable } from "./ItineraryTable";
 import { ItineraryCardsView } from "./ItineraryCardsView";
+import { getDayDateInfo } from "../utils/dateUtils";
 
 export function ItineraryView({
   trip,
