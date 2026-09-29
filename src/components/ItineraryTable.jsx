@@ -305,9 +305,7 @@ export function ItineraryTable({
             {items.map((item, index) => {
               const periodStyle = periodStyles[item.period] || periodStyles.Morning;
               const PeriodIcon = periodStyle.icon;
-              const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                `${item.activity} ${item.location || ""}`
-              )}`;
+              const mapsUrl = resolveItemMapsUrl(item);
 
               const bStatus = bookingStyles[item.bookingStatus] || {
                 class: "bg-slate-100 text-slate-700",
@@ -373,14 +371,19 @@ export function ItineraryTable({
                   {/* Activity / Place */}
                   <td className="py-2.5 px-4 align-middle">
                     <div className="flex flex-col">
-                      <span
+                      <a
+                        href={mapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         dir="auto"
-                        className={`font-bold text-slate-900 text-xs sm:text-sm ${
+                        className={`font-bold text-slate-900 text-xs sm:text-sm hover:text-sky-600 transition-colors inline-flex items-center gap-1.5 group/act ${
                           item.completed ? "line-through text-slate-400" : ""
                         }`}
+                        title={isHe ? "פתח מיקום ב-Google Maps" : "Open location in Google Maps"}
                       >
-                        {item.activity}
-                      </span>
+                        <span className="group-hover/act:underline">{item.activity}</span>
+                        <ExternalLink className="w-3 h-3 text-slate-400 group-hover/act:text-sky-600 shrink-0 opacity-0 group-hover/act:opacity-100 transition-opacity" />
+                      </a>
                       {item.linkedPlaceId && (
                         <span className="text-[9px] text-sky-600 font-medium mt-0.5">
                           ✓ {isHe ? "מקושר לבנק המקומות" : "Linked from Places"}
@@ -391,23 +394,19 @@ export function ItineraryTable({
 
                   {/* Location / Address */}
                   <td className="py-2.5 px-4 text-slate-600 align-middle">
-                    {item.location ? (
-                      <div className="flex items-center gap-1 text-xs">
-                        <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                        <span className="truncate max-w-[160px]" dir="auto">{item.location}</span>
-                        <a
-                          href={mapsUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sky-600 hover:text-sky-800 p-0.5"
-                          title="Open Google Maps"
-                        >
-                          <ExternalLink className="w-3 h-3" />
-                        </a>
-                      </div>
-                    ) : (
-                      <span className="text-slate-300 italic">--</span>
-                    )}
+                    <a
+                      href={mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs text-sky-700 bg-sky-50/80 hover:bg-sky-100 hover:text-sky-900 px-2.5 py-1 rounded-lg border border-sky-200/60 transition-all font-medium group/loc max-w-[200px]"
+                      title={isHe ? "פתח מיקום ב-Google Maps" : "Open location in Google Maps"}
+                    >
+                      <MapPin className="w-3.5 h-3.5 text-sky-600 group-hover/loc:scale-110 transition-transform shrink-0" />
+                      <span className="truncate" dir="auto">
+                        {item.location || (isHe ? "פתח מפה" : "Open map")}
+                      </span>
+                      <ExternalLink className="w-3 h-3 text-sky-500 shrink-0 opacity-70 group-hover/loc:opacity-100" />
+                    </a>
                   </td>
 
                   {/* Cost & Booking Status */}
