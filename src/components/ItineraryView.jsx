@@ -450,7 +450,7 @@ export function ItineraryView({
           {/* Day Section Card */}
           <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2.5 flex-wrap">
                 <span className="w-7 h-7 rounded-xl bg-sky-600 text-white font-extrabold text-xs flex items-center justify-center">
                   {dayNum}
                 </span>
@@ -460,6 +460,21 @@ export function ItineraryView({
                 <span className="text-xs text-slate-400 font-medium">
                   ({itinerary.filter((i) => i.dayNumber === dayNum).length} {isHe ? "פעילויות" : "activities"})
                 </span>
+
+                {/* 🗺️ Open Day Route / Map in Google Maps */}
+                {itinerary.filter((i) => i.dayNumber === dayNum).length > 0 && (
+                  <a
+                    href={getDayMapsUrl(itinerary.filter((i) => i.dayNumber === dayNum))}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-200 transition-all shadow-2xs hover:shadow-xs group cursor-pointer"
+                    title={isHe ? `פתח את מפת יום ${dayNum} ב-Google Maps` : `Open Day ${dayNum} map on Google Maps`}
+                  >
+                    <MapPin className="w-3.5 h-3.5 text-emerald-600 group-hover:scale-110 transition-transform" />
+                    <span>{isHe ? `מפת יום ${dayNum} ב-Google Maps` : `Day ${dayNum} Map`}</span>
+                    <ExternalLink className="w-3 h-3 text-emerald-600 opacity-70 group-hover:opacity-100" />
+                  </a>
+                )}
               </div>
 
               {/* Inline Input to add activity to this day (Admin only) */}
