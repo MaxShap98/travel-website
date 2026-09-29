@@ -398,9 +398,10 @@ export function PlaceModal({
                 onChange={(e) => setStatus(e.target.value)}
                 className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs font-bold focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white"
               >
+                <option value="Unset">{isHe ? "⚪ טרם הוגדר" : "⚪ Unset"}</option>
                 <option value="Must Visit">{isHe ? "🌟 חובה לבקר" : "🌟 Must Visit"}</option>
-                <option value="Booked">{isHe ? "✓ מוזמן / משוריין" : "✓ Booked"}</option>
                 <option value="Optional">{isHe ? "💡 אופציונלי" : "💡 Optional"}</option>
+                <option value="Booked">{isHe ? "✓ מוזמן / משוריין" : "✓ Booked"}</option>
                 <option value="Visited">{isHe ? "📍 ביקרנו כבר" : "📍 Visited"}</option>
               </select>
             </div>
