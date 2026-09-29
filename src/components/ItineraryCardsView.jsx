@@ -197,6 +197,34 @@ export function ItineraryCardsView({
 
                     {!isReadOnly && (
                       <div className="flex items-center gap-1 no-print">
+                        {onMoveUp && (
+                          <button
+                            disabled={actIndex === 0}
+                            onClick={() => onMoveUp(item.id)}
+                            className={`p-1.5 rounded-lg border border-slate-200 transition-colors ${
+                              actIndex === 0
+                                ? "opacity-20 cursor-not-allowed"
+                                : "text-slate-500 hover:bg-slate-100 hover:text-slate-800 cursor-pointer"
+                            }`}
+                            title={isHe ? "העלה למעלה" : "Move Up"}
+                          >
+                            <ArrowUp className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                        {onMoveDown && (
+                          <button
+                            disabled={actIndex === group.activities.length - 1}
+                            onClick={() => onMoveDown(item.id)}
+                            className={`p-1.5 rounded-lg border border-slate-200 transition-colors ${
+                              actIndex === group.activities.length - 1
+                                ? "opacity-20 cursor-not-allowed"
+                                : "text-slate-500 hover:bg-slate-100 hover:text-slate-800 cursor-pointer"
+                            }`}
+                            title={isHe ? "הורד למטה" : "Move Down"}
+                          >
+                            <ArrowDown className="w-3.5 h-3.5" />
+                          </button>
+                        )}
                         <button
                           onClick={() => onEdit(item)}
                           className="p-1.5 text-slate-400 hover:text-sky-600 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
