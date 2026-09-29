@@ -45,6 +45,28 @@ export function ItineraryView({
   const [viewMode, setViewMode] = useState("table"); // 'table' | 'cards'
   const [selectedDay, setSelectedDay] = useState("all");
   const [showSavedPool, setShowSavedPool] = useState(true);
+  const [poolCategory, setPoolCategory] = useState("all");
+
+  const poolCategories = [
+    { id: "all", label: isHe ? "כל המקומות" : "All Places" },
+    { id: "dining", label: isHe ? "🍽️ מסעדות ואוכל" : "🍽️ Dining" },
+    { id: "nightlife", label: isHe ? "🍸 ברים ובילוי" : "🍸 Nightlife" },
+    { id: "attractions", label: isHe ? "🏛️ אטרקציות" : "🏛️ Attractions" },
+    { id: "events", label: isHe ? "⛵ פעילויות וסיורים" : "⛵ Tours" },
+    { id: "hotels", label: isHe ? "🏨 מלונות ולינה" : "🏨 Hotels" },
+    { id: "shopping", label: isHe ? "🛍️ קניות" : "🛍️ Shopping" },
+    { id: "tips", label: isHe ? "💡 טיפים וכללי" : "💡 General" }
+  ];
+
+  const categoryLabels = {
+    dining: isHe ? "מסעדה" : "Dining",
+    nightlife: isHe ? "בר ובילוי" : "Nightlife",
+    attractions: isHe ? "אטרקציה" : "Attraction",
+    events: isHe ? "פעילות" : "Event",
+    hotels: isHe ? "מלון" : "Hotel",
+    shopping: isHe ? "קניות" : "Shopping",
+    tips: isHe ? "כללי" : "General"
+  };
 
   // Quick activity inline inputs per day
   const [dayInputs, setDayInputs] = useState({});
@@ -52,6 +74,38 @@ export function ItineraryView({
 
   const totalDays = trip.durationDays || 5;
   const daysList = Array.from({ length: totalDays }, (_, i) => i + 1);
+
+  // Map each place to which days it is currently scheduled in
+  const scheduledDaysMap = useMemo(() => {
+    const map = {};
+    (itinerary || []).forEach((item) => {
+      const d = item.dayNumber;
+      if (item.linkedPlaceId) {
+        if (!map[item.linkedPlaceId]) map[item.linkedPlaceId] = new Set();
+        map[item.linkedPlaceId].add(d);
+      }
+      if (item.activity) {
+        const nameKey = item.activity.trim().toLowerCase();
+        if (!map[nameKey]) map[nameKey] = new Set();
+        map[nameKey].add(d);
+      }
+    });
+    return map;
+  }, [itinerary]);
+
+  const getScheduledDaysForPlace = (p) => {
+    const byId = scheduledDaysMap[p.id] ? Array.from(scheduledDaysMap[p.id]) : [];
+    const byName = (p.name && scheduledDaysMap[p.name.trim().toLowerCase()])
+      ? Array.from(scheduledDaysMap[p.name.trim().toLowerCase()])
+      : [];
+    return Array.from(new Set([...byId, ...byName]));
+  };
+
+  // Filter pool places by category
+  const filteredPoolPlaces = useMemo(() => {
+    if (poolCategory === "all") return places;
+    return places.filter((p) => p.category === poolCategory);
+  }, [places, poolCategory]);
 
   // Filtered and deduplicated itinerary
   const filteredItinerary = useMemo(() => {
