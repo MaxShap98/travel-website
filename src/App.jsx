@@ -35,6 +35,23 @@ const STORAGE_KEY_AUTH = "travel_planner_auth_user_session_v1";
 const STORAGE_KEY_LAST_ACTIVITY = "travel_planner_last_activity_session_v1";
 const INACTIVITY_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes in milliseconds
 
+// Guarantees each place appears at most once per day in the itinerary
+export function deduplicateItinerary(itineraryList) {
+  if (!Array.isArray(itineraryList)) return [];
+  const seen = new Set();
+  return itineraryList.filter((item) => {
+    const placeKey = item.linkedPlaceId
+      ? `place_${item.linkedPlaceId}`
+      : `act_${(item.activity || "").trim().toLowerCase()}`;
+    const uniqueKey = `${placeKey}_day_${item.dayNumber}`;
+    if (seen.has(uniqueKey)) {
+      return false;
+    }
+    seen.add(uniqueKey);
+    return true;
+  });
+}
+
 export default function App() {
   // Clear any legacy persistent auth so every fresh browser session always starts with login
   try {
