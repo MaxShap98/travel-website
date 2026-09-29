@@ -381,13 +381,13 @@ export function ItineraryTable({
                   </td>
 
                   {/* Activity / Place */}
-                  <td className="py-2.5 px-4 align-middle">
+                  <td className={`py-2.5 px-4 align-middle ${isHe ? "text-right" : "text-left"}`}>
                     <div className="flex flex-col">
                       <a
                         href={mapsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        dir="auto"
+                        dir={isHe ? "rtl" : "ltr"}
                         className={`font-bold text-slate-900 text-xs sm:text-sm hover:text-sky-600 transition-colors inline-flex items-center gap-1.5 group/act ${
                           item.completed ? "line-through text-slate-400" : ""
                         }`}
@@ -405,7 +405,7 @@ export function ItineraryTable({
                   </td>
 
                   {/* Location / Address */}
-                  <td className="py-2.5 px-4 text-slate-600 align-middle">
+                  <td className={`py-2.5 px-4 text-slate-600 align-middle ${isHe ? "text-right" : "text-left"}`}>
                     <a
                       href={mapsUrl}
                       target="_blank"
@@ -414,7 +414,7 @@ export function ItineraryTable({
                       title={isHe ? "פתח מיקום ב-Google Maps" : "Open location in Google Maps"}
                     >
                       <MapPin className="w-3.5 h-3.5 text-sky-600 group-hover/loc:scale-110 transition-transform shrink-0" />
-                      <span className="truncate" dir="auto">
+                      <span className="truncate" dir={isHe ? "rtl" : "ltr"}>
                         {item.location || (isHe ? "פתח מפה" : "Open map")}
                       </span>
                       <ExternalLink className="w-3 h-3 text-sky-500 shrink-0 opacity-70 group-hover/loc:opacity-100" />
@@ -438,9 +438,9 @@ export function ItineraryTable({
                   </td>
 
                   {/* Notes / Reminders */}
-                  <td className="py-2.5 px-4 text-slate-600 align-middle">
+                  <td className={`py-2.5 px-4 text-slate-600 align-middle ${isHe ? "text-right" : "text-left"}`}>
                     {item.notes ? (
-                      <div className="line-clamp-2 text-xs text-slate-600 bg-slate-50 p-1.5 rounded border border-slate-100" dir="auto">
+                      <div className={`line-clamp-2 text-xs text-slate-600 bg-slate-50 p-1.5 rounded border border-slate-100 ${isHe ? "text-right" : "text-left"}`} dir={isHe ? "rtl" : "ltr"}>
                         {item.notes}
                       </div>
                     ) : (
