@@ -96,7 +96,7 @@ export function ItineraryCardsView({
 
           {/* Day Activities List */}
           <div className="p-3 sm:p-4 divide-y divide-slate-100">
-            {group.activities.map((item) => {
+            {group.activities.map((item, actIndex) => {
               const pStyle = periodStyles[item.period] || periodStyles.Morning;
               const PeriodIcon = pStyle.icon;
               const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
