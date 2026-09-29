@@ -58,20 +58,25 @@ export function PlaceCard({
   const CategoryIcon = categoryIcons[place.category] || Compass;
 
   const statusStyles = {
+    Unset: {
+      bg: "bg-slate-100/90 text-slate-600 border-slate-300 ring-slate-400/20 hover:bg-slate-200/70",
+      dot: "bg-slate-400",
+      label: isHe ? "טרם הוגדר" : "Unset"
+    },
     "Must Visit": {
       bg: "bg-emerald-50 text-emerald-700 border-emerald-300 ring-emerald-400/30",
       dot: "bg-emerald-500",
       label: isHe ? "חובה לבקר" : "Must Visit"
     },
-    Booked: {
-      bg: "bg-sky-50 text-sky-700 border-sky-300 ring-sky-400/30",
-      dot: "bg-sky-500",
-      label: isHe ? "הוזמן מראש" : "Booked"
-    },
     Optional: {
       bg: "bg-amber-50 text-amber-700 border-amber-300 ring-amber-400/30",
       dot: "bg-amber-500",
       label: isHe ? "אופציונלי" : "Optional"
+    },
+    Booked: {
+      bg: "bg-sky-50 text-sky-700 border-sky-300 ring-sky-400/30",
+      dot: "bg-sky-500",
+      label: isHe ? "הוזמן מראש" : "Booked"
     },
     Visited: {
       bg: "bg-purple-50 text-purple-700 border-purple-300 ring-purple-400/30",
@@ -80,11 +85,7 @@ export function PlaceCard({
     }
   };
 
-  const currentStatus = statusStyles[place.status] || {
-    bg: "bg-slate-50 text-slate-700 border-slate-300",
-    dot: "bg-slate-400",
-    label: place.status
-  };
+  const currentStatus = statusStyles[place.status] || statusStyles["Unset"];
 
   // Google Maps fallback URL
   const mapsSearchUrl =
