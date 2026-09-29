@@ -9,7 +9,9 @@ import {
   Moon,
   Edit2,
   Trash2,
-  ExternalLink
+  ExternalLink,
+  ArrowUp,
+  ArrowDown
 } from "lucide-react";
 
 export function ItineraryCardsView({
