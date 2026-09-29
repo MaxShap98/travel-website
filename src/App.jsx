@@ -32,6 +32,8 @@ const STORAGE_KEY_TRIPS = "travel_planner_trips_v2";
 const STORAGE_KEY_ACTIVE_ID = "travel_planner_active_id_v2";
 const STORAGE_KEY_LANG = "travel_planner_lang_v2";
 const STORAGE_KEY_AUTH = "travel_planner_auth_user_v1";
+const STORAGE_KEY_LAST_ACTIVITY = "travel_planner_last_activity_v1";
+const INACTIVITY_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes in milliseconds
 
 export default function App() {
   // Language state (defaulting to Hebrew since the user requested in Hebrew)
@@ -45,13 +47,35 @@ export default function App() {
 
   const isHe = lang === "he";
 
+  // Logout reason state (e.g. "inactivity")
+  const [logoutReason, setLogoutReason] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem(STORAGE_KEY_AUTH);
+      const savedLastActivity = localStorage.getItem(STORAGE_KEY_LAST_ACTIVITY);
+      if (savedUser && savedLastActivity) {
+        if (Date.now() - parseInt(savedLastActivity, 10) > INACTIVITY_TIMEOUT_MS) {
+          return "inactivity";
+        }
+      }
+    } catch (e) {}
+    return null;
+  });
+
   // Authentication state (admin vs guest)
   const [currentUser, setCurrentUser] = useState(() => {
     try {
       const savedUser = localStorage.getItem(STORAGE_KEY_AUTH);
+      const savedLastActivity = localStorage.getItem(STORAGE_KEY_LAST_ACTIVITY);
       if (savedUser) {
+        // If inactive for > 10 minutes, expire session immediately
+        if (savedLastActivity && Date.now() - parseInt(savedLastActivity, 10) > INACTIVITY_TIMEOUT_MS) {
+          localStorage.removeItem(STORAGE_KEY_AUTH);
+          localStorage.removeItem(STORAGE_KEY_LAST_ACTIVITY);
+          return null;
+        }
         const parsed = JSON.parse(savedUser);
         if (parsed && (parsed.role === "admin" || parsed.role === "guest")) {
+          localStorage.setItem(STORAGE_KEY_LAST_ACTIVITY, Date.now().toString());
           return parsed;
         }
       }
