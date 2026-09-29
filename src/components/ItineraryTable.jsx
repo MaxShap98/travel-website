@@ -351,9 +351,16 @@ export function ItineraryTable({
 
                   {/* Day / Date */}
                   <td className="py-2.5 px-3 font-bold text-slate-800 whitespace-nowrap align-middle">
-                    <span className="text-sky-900 bg-sky-50 px-2 py-0.5 rounded text-[11px] border border-sky-100 font-extrabold">
-                      {isHe ? `יום ${item.dayNumber}` : item.dayLabel || `Day ${item.dayNumber}`}
-                    </span>
+                    <div className="flex flex-col items-start gap-0.5">
+                      <span className="text-sky-900 bg-sky-50 px-2 py-0.5 rounded text-[11px] border border-sky-100 font-extrabold">
+                        {isHe ? `יום ${item.dayNumber}` : item.dayLabel || `Day ${item.dayNumber}`}
+                      </span>
+                      {getDayDateInfo(trip, item.dayNumber, lang) && (
+                        <span className="text-[10px] text-slate-500 font-bold px-0.5">
+                          {getDayDateInfo(trip, item.dayNumber, lang).combinedShort}
+                        </span>
+                      )}
+                    </div>
                   </td>
 
                   {/* Time / Period */}
