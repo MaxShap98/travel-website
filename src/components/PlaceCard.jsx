@@ -155,11 +155,11 @@ export function PlaceCard({
         {/* Card Body */}
         <div className="p-4 space-y-3">
           <div>
-            <h3 className="font-bold text-base text-slate-900 group-hover:text-sky-700 transition-colors" dir="auto">
+            <h3 className={`font-bold text-base text-slate-900 group-hover:text-sky-700 transition-colors ${isHe ? "text-right" : "text-left"}`} dir={isHe ? "rtl" : "ltr"}>
               {place.name}
             </h3>
             {place.description && (
-              <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed" dir="auto">
+              <p className={`text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed ${isHe ? "text-right" : "text-left"}`} dir={isHe ? "rtl" : "ltr"}>
                 {place.description}
               </p>
             )}
@@ -175,7 +175,7 @@ export function PlaceCard({
               title={isHe ? "פתח ב-Google Maps" : "Open in Google Maps"}
             >
               <MapPin className="w-3.5 h-3.5 text-slate-400 group-hover/loc:text-sky-600 shrink-0 transition-colors" />
-              <span className="truncate underline decoration-slate-300 group-hover/loc:decoration-sky-500" dir="auto">
+              <span className="truncate underline decoration-slate-300 group-hover/loc:decoration-sky-500" dir={isHe ? "rtl" : "ltr"}>
                 {place.location}
               </span>
             </a>
@@ -183,7 +183,7 @@ export function PlaceCard({
 
           {/* Personal Notes / Tips */}
           {place.notes && (
-            <div className="text-xs text-slate-700 bg-amber-50/70 p-2 rounded-xl border border-amber-200/80 leading-relaxed" dir="auto">
+            <div className={`text-xs text-slate-700 bg-amber-50/70 p-2 rounded-xl border border-amber-200/80 leading-relaxed ${isHe ? "text-right" : "text-left"}`} dir={isHe ? "rtl" : "ltr"}>
               💡 <span className="font-semibold">{isHe ? "הערה/טיפ:" : "Note:"}</span> {place.notes}
             </div>
           )}
