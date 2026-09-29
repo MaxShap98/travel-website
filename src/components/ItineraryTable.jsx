@@ -185,8 +185,8 @@ export function ItineraryTable({
                   </div>
 
                   <h4
-                    dir="auto"
-                    className={`font-bold text-slate-900 text-sm break-words ${
+                    dir={isHe ? "rtl" : "ltr"}
+                    className={`font-bold text-slate-900 text-sm break-words ${isHe ? "text-right" : "text-left"} ${
                       item.completed ? "line-through text-slate-400" : ""
                     }`}
                   >
@@ -211,7 +211,7 @@ export function ItineraryTable({
                       title={isHe ? "פתח מיקום ב-Google Maps" : "Open in Google Maps"}
                     >
                       <MapPin className="w-3 h-3 text-sky-600 shrink-0" />
-                      <span className="truncate max-w-[190px]" dir="auto">
+                      <span className="truncate max-w-[190px]" dir={isHe ? "rtl" : "ltr"}>
                         {item.location || item.activity}
                       </span>
                       <ExternalLink className="w-2.5 h-2.5 text-sky-500 shrink-0" />
