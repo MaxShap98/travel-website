@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   Lock,
   User,
@@ -6,16 +5,18 @@ import {
   EyeOff,
   Plane,
   AlertCircle,
-  ArrowRight
+  ArrowRight,
+  Clock
 } from "lucide-react";
 
-export function LoginPage({ onLogin, lang = "he" }) {
+export function LoginPage({ onLogin, lang = "he", timeoutNotice = false }) {
   const isHe = lang === "he";
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [dismissedNotice, setDismissedNotice] = useState(false);
 
   // Authentication validation
   const handleSubmit = (e) => {
