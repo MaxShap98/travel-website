@@ -541,10 +541,11 @@ export function ItineraryView({
 
             {/* Activities for this Day */}
             <div className="pt-3">
-              {itinerary.filter((i) => i.dayNumber === dayNum).length > 0 ? (
+              {dayActivities.length > 0 ? (
                 viewMode === "cards" ? (
                   <ItineraryCardsView
-                    items={itinerary.filter((i) => i.dayNumber === dayNum)}
+                    items={dayActivities}
+                    trip={trip}
                     places={places}
                     destination={trip?.destination || ""}
                     currencySymbol={currencySymbol}
@@ -558,7 +559,8 @@ export function ItineraryView({
                   />
                 ) : (
                   <ItineraryTable
-                    items={itinerary.filter((i) => i.dayNumber === dayNum)}
+                    items={dayActivities}
+                    trip={trip}
                     places={places}
                     destination={trip?.destination || ""}
                     currencySymbol={currencySymbol}
@@ -581,7 +583,8 @@ export function ItineraryView({
             </div>
           </div>
         </div>
-      ))}
+      );
+    })}
     </div>
   );
 }
