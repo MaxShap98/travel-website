@@ -315,8 +315,8 @@ export default function App() {
     setCurrentUser(userObj);
     setLogoutReason(null);
     try {
-      localStorage.setItem(STORAGE_KEY_AUTH, JSON.stringify(userObj));
-      localStorage.setItem(STORAGE_KEY_LAST_ACTIVITY, Date.now().toString());
+      sessionStorage.setItem(STORAGE_KEY_AUTH, JSON.stringify(userObj));
+      sessionStorage.setItem(STORAGE_KEY_LAST_ACTIVITY, Date.now().toString());
     } catch (e) {}
     showToast({
       type: "success",
@@ -330,8 +330,8 @@ export default function App() {
     setCurrentUser(null);
     setLogoutReason(isTimeout ? "inactivity" : null);
     try {
-      localStorage.removeItem(STORAGE_KEY_AUTH);
-      localStorage.removeItem(STORAGE_KEY_LAST_ACTIVITY);
+      sessionStorage.removeItem(STORAGE_KEY_AUTH);
+      sessionStorage.removeItem(STORAGE_KEY_LAST_ACTIVITY);
     } catch (e) {}
   };
 
@@ -356,11 +356,11 @@ export default function App() {
       scheduleTimeout();
 
       const now = Date.now();
-      // Throttle localStorage writes to at most once every 5 seconds
+      // Throttle sessionStorage writes to at most once every 5 seconds
       if (now - lastThrottledRecord > 5000) {
         lastThrottledRecord = now;
         try {
-          localStorage.setItem(STORAGE_KEY_LAST_ACTIVITY, now.toString());
+          sessionStorage.setItem(STORAGE_KEY_LAST_ACTIVITY, now.toString());
         } catch (e) {}
       }
     };
@@ -388,7 +388,7 @@ export default function App() {
     const handleVisibilityOrFocus = () => {
       if (document.visibilityState === "visible") {
         try {
-          const savedLast = localStorage.getItem(STORAGE_KEY_LAST_ACTIVITY);
+          const savedLast = sessionStorage.getItem(STORAGE_KEY_LAST_ACTIVITY);
           if (savedLast && Date.now() - parseInt(savedLast, 10) >= INACTIVITY_TIMEOUT_MS) {
             performAutoLogout();
             return;
