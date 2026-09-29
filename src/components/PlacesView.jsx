@@ -334,7 +334,7 @@ export function PlacesView({
           <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px] mr-1">
             {isHe ? "סטטוס:" : "Status:"}
           </span>
-          {["all", "Must Visit", "Booked", "Optional"].map((st) => (
+          {["all", "Unset", "Must Visit", "Booked", "Optional"].map((st) => (
             <button
               key={st}
               onClick={() => setStatusFilter(st)}
@@ -348,6 +348,10 @@ export function PlacesView({
                 ? isHe
                   ? "הכל"
                   : "All"
+                : st === "Unset"
+                ? isHe
+                  ? "טרם הוגדר"
+                  : "Unset"
                 : st === "Must Visit"
                 ? isHe
                   ? "חובה"
