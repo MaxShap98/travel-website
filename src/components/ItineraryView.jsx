@@ -527,6 +527,8 @@ export function ItineraryView({
                 viewMode === "cards" ? (
                   <ItineraryCardsView
                     items={itinerary.filter((i) => i.dayNumber === dayNum)}
+                    places={places}
+                    destination={trip?.destination || ""}
                     currencySymbol={currencySymbol}
                     lang={lang}
                     onToggleComplete={onToggleComplete}
@@ -539,6 +541,8 @@ export function ItineraryView({
                 ) : (
                   <ItineraryTable
                     items={itinerary.filter((i) => i.dayNumber === dayNum)}
+                    places={places}
+                    destination={trip?.destination || ""}
                     currencySymbol={currencySymbol}
                     lang={lang}
                     onToggleComplete={onToggleComplete}
