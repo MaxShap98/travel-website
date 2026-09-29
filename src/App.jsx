@@ -681,7 +681,8 @@ export default function App() {
       cost: place.cost || 0,
       bookingStatus: place.status === "Booked" ? "Confirmed" : "Planned",
       notes: place.notes || "",
-      completed: false
+      completed: false,
+      mapsUrl: place.mapsUrl || ""
     };
 
     updateCurrentTrip((prev) => {
