@@ -30,8 +30,8 @@ function deduplicateItinerary(itineraryList) {
 }
 
 async function cleanDuplicates() {
-  console.log("Checking Firestore shared_state for duplicate itinerary items...");
-  const docRef = doc(db, "travel_planner_v2", "shared_state");
+  console.log("Checking Firestore app_state / global_master_state for duplicate itinerary items...");
+  const docRef = doc(db, "app_state", "global_master_state");
   const snap = await getDoc(docRef);
 
   if (!snap.exists()) {
