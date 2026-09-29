@@ -98,24 +98,33 @@ export function ItineraryCardsView({
 
   return (
     <div className="space-y-4 sm:space-y-6" dir={isHe ? "rtl" : "ltr"}>
-      {sortedDays.map((group) => (
-        <div
-          key={group.dayNumber}
-          className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden"
-        >
-          {/* Day Section Header */}
-          <div className="p-3.5 sm:p-4 bg-gradient-to-r from-slate-900 to-slate-800 text-white flex items-center justify-between">
-            <div className="flex items-center gap-2.5 sm:gap-3">
-              <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-sky-500 text-white font-extrabold flex items-center justify-center text-xs sm:text-sm shadow-xs shrink-0">
-                {group.dayNumber}
-              </span>
-              <div>
-                <h3 className="text-sm sm:text-base font-bold">{group.dayLabel}</h3>
-                <p className="text-[11px] sm:text-xs text-slate-300">
-                  {group.activities.length} {isHe ? "פעילויות מתוכננות" : "planned activities"}
-                </p>
+      {sortedDays.map((group) => {
+        const dInfo = getDayDateInfo(trip, group.dayNumber, lang);
+        return (
+          <div
+            key={group.dayNumber}
+            className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden"
+          >
+            {/* Day Section Header */}
+            <div className="p-3.5 sm:p-4 bg-gradient-to-r from-slate-900 to-slate-800 text-white flex items-center justify-between">
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-sky-500 text-white font-extrabold flex items-center justify-center text-xs sm:text-sm shadow-xs shrink-0">
+                  {group.dayNumber}
+                </span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm sm:text-base font-bold">{group.dayLabel}</h3>
+                    {dInfo && (
+                      <span className="px-2 py-0.5 rounded-md bg-white/10 text-sky-200 text-xs font-bold border border-white/10">
+                        📅 {dInfo.combinedWithDay}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-slate-300">
+                    {group.activities.length} {isHe ? "פעילויות מתוכננות" : "planned activities"}
+                  </p>
+                </div>
               </div>
-            </div>
 
             <div className="text-[11px] sm:text-xs text-sky-300 font-semibold">
               {isHe ? "סה״כ משוער:" : "Total Day Est:"} {currencySymbol}
