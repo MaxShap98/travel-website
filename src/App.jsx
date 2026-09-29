@@ -307,8 +307,10 @@ export default function App() {
 
   const handleLogin = (userObj) => {
     setCurrentUser(userObj);
+    setLogoutReason(null);
     try {
       localStorage.setItem(STORAGE_KEY_AUTH, JSON.stringify(userObj));
+      localStorage.setItem(STORAGE_KEY_LAST_ACTIVITY, Date.now().toString());
     } catch (e) {}
     showToast({
       type: "success",
@@ -318,12 +320,90 @@ export default function App() {
     });
   };
 
-  const handleLogout = () => {
+  const handleLogout = (isTimeout = false) => {
     setCurrentUser(null);
+    setLogoutReason(isTimeout ? "inactivity" : null);
     try {
       localStorage.removeItem(STORAGE_KEY_AUTH);
+      localStorage.removeItem(STORAGE_KEY_LAST_ACTIVITY);
     } catch (e) {}
   };
+
+  // 10-minute inactivity auto-logout watcher
+  useEffect(() => {
+    if (!currentUser) return;
+
+    let timeoutId = null;
+
+    const performAutoLogout = () => {
+      handleLogout(true);
+    };
+
+    const scheduleTimeout = () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(performAutoLogout, INACTIVITY_TIMEOUT_MS);
+    };
+
+    let lastThrottledRecord = Date.now();
+
+    const recordActivity = () => {
+      scheduleTimeout();
+
+      const now = Date.now();
+      // Throttle localStorage writes to at most once every 5 seconds
+      if (now - lastThrottledRecord > 5000) {
+        lastThrottledRecord = now;
+        try {
+          localStorage.setItem(STORAGE_KEY_LAST_ACTIVITY, now.toString());
+        } catch (e) {}
+      }
+    };
+
+    // User activity events across mouse, keyboard, touch and scrolling
+    const activityEvents = [
+      "mousemove",
+      "mousedown",
+      "keydown",
+      "touchstart",
+      "scroll",
+      "wheel",
+      "click"
+    ];
+
+    // Initial setup
+    recordActivity();
+
+    // Attach listeners
+    activityEvents.forEach((evt) => {
+      window.addEventListener(evt, recordActivity, { passive: true });
+    });
+
+    // Check on tab visibility change or window focus
+    const handleVisibilityOrFocus = () => {
+      if (document.visibilityState === "visible") {
+        try {
+          const savedLast = localStorage.getItem(STORAGE_KEY_LAST_ACTIVITY);
+          if (savedLast && Date.now() - parseInt(savedLast, 10) >= INACTIVITY_TIMEOUT_MS) {
+            performAutoLogout();
+            return;
+          }
+        } catch (e) {}
+        recordActivity();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityOrFocus);
+    window.addEventListener("focus", handleVisibilityOrFocus);
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      activityEvents.forEach((evt) => {
+        window.removeEventListener(evt, recordActivity);
+      });
+      document.removeEventListener("visibilitychange", handleVisibilityOrFocus);
+      window.removeEventListener("focus", handleVisibilityOrFocus);
+    };
+  }, [currentUser]);
 
   // Helper to push all trips & active ID to Firestore
   const triggerCloudSync = (nextTrips, nextActiveId = activeTripIdRef.current) => {
