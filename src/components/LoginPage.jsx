@@ -120,7 +120,10 @@ export function LoginPage({ onLogin, lang = "he", timeoutNotice = false }) {
                 required
                 autoComplete="username"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  if (!dismissedNotice) setDismissedNotice(true);
+                }}
                 placeholder={isHe ? "הזן שם משתמש" : "Enter username"}
                 className={`w-full ${isHe ? "pr-10 pl-3.5" : "pl-10 pr-3.5"} py-2.5 bg-white/10 hover:bg-white/15 focus:bg-white/20 border border-white/20 rounded-xl text-white placeholder-sky-200/40 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all`}
               />
@@ -138,7 +141,10 @@ export function LoginPage({ onLogin, lang = "he", timeoutNotice = false }) {
                 required
                 autoComplete="current-password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (!dismissedNotice) setDismissedNotice(true);
+                }}
                 placeholder="••••••••"
                 className={`w-full ${isHe ? "pr-10 pl-10" : "pl-10 pr-10"} py-2.5 bg-white/10 hover:bg-white/15 focus:bg-white/20 border border-white/20 rounded-xl text-white placeholder-sky-200/40 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all`}
               />
