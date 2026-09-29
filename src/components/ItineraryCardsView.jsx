@@ -19,6 +19,8 @@ export function ItineraryCardsView({
   currencySymbol = "€",
   lang = "he",
   onToggleComplete,
+  onMoveUp,
+  onMoveDown,
   onEdit,
   onDelete,
   isReadOnly = false
