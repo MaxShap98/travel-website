@@ -292,7 +292,8 @@ export function ItineraryCardsView({
             })}
           </div>
         </div>
-      ))}
+      );
+    })}
     </div>
   );
 }
