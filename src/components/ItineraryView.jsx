@@ -499,20 +499,23 @@ export function ItineraryView({
                 <form
                   onSubmit={(e) => handleInlineAdd(dayNum, e)}
                   className="flex items-center gap-2 flex-1 max-w-xl"
+                  dir={isHe ? "rtl" : "ltr"}
                 >
                   <input
                     type="text"
-                    dir="auto"
+                    dir={isHe ? "rtl" : "ltr"}
                     value={dayInputs[dayNum] || ""}
                     onChange={(e) =>
                       setDayInputs({ ...dayInputs, [dayNum]: e.target.value })
                     }
                     placeholder={
                       isHe
-                        ? `+ הוסף פעילות ליום ${dayNum} (לחץ Enter)...`
+                        ? `\u200F+ הוסף פעילות ליום ${dayNum} (לחץ Enter)...`
                         : `+ Add activity to Day ${dayNum} (press Enter)...`
                     }
-                    className="flex-1 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"
+                    className={`flex-1 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none ${
+                      isHe ? "text-right" : "text-left"
+                    }`}
                   />
 
                   <select
