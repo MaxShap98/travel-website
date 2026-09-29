@@ -202,49 +202,120 @@ export function ItineraryView({
           </div>
 
           {showSavedPool && (
-            <div className="p-4 bg-slate-50/50 max-h-56 overflow-y-auto space-y-2">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                {places.map((place) => {
-                  const isScheduled = !unscheduledPlaces.some((u) => u.id === place.id);
+            <div>
+              {/* Category Pills inside the Pool */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none border-b border-sky-100 px-4 py-2.5 bg-sky-50/50">
+                {poolCategories.map((cat) => {
+                  const isSelected = poolCategory === cat.id;
+                  const count =
+                    cat.id === "all"
+                      ? places.length
+                      : places.filter((p) => p.category === cat.id).length;
+
+                  if (count === 0 && cat.id !== "all") return null;
+
                   return (
-                    <div
-                      key={place.id}
-                      className={`p-2.5 rounded-xl border transition-all flex items-center justify-between gap-2 text-xs ${
-                        isScheduled
-                          ? "bg-slate-100/80 border-slate-200 opacity-70"
-                          : "bg-white border-sky-200 shadow-xs hover:border-sky-400"
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setPoolCategory(cat.id)}
+                      className={`flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                        isSelected
+                          ? "bg-slate-900 text-white shadow-xs"
+                          : "bg-white text-slate-600 hover:text-slate-900 border border-slate-200/80 hover:bg-slate-100"
                       }`}
                     >
-                      <div className="min-w-0">
-                        <div className="font-bold text-slate-800 truncate" dir="auto">
-                          {place.name}
-                        </div>
-                        <div className="text-[10px] text-slate-400 truncate">
-                          {place.location || place.category}
-                        </div>
-                      </div>
-
-                      {/* 1-Click Day Buttons (Admin only) */}
-                      {!isReadOnly && (
-                        <div className="flex items-center gap-1 shrink-0">
-                          <span className="text-[10px] text-slate-400 font-semibold">
-                            {isHe ? "שבץ ב:" : "Day:"}
-                          </span>
-                          {daysList.slice(0, 5).map((d) => (
-                            <button
-                              key={d}
-                              onClick={() => onQuickSchedulePlace(place, d)}
-                              className="px-1.5 py-0.5 bg-sky-50 hover:bg-sky-600 hover:text-white border border-sky-200 rounded font-bold text-[10px] transition-colors cursor-pointer"
-                              title={isHe ? `שבץ ביום ${d}` : `Assign to Day ${d}`}
-                            >
-                              {d}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                      <span>{cat.label}</span>
+                      <span
+                        className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                          isSelected ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"
+                        }`}
+                      >
+                        {count}
+                      </span>
+                    </button>
                   );
                 })}
+              </div>
+
+              {/* Grid of Places for Selected Category */}
+              <div className="p-4 bg-slate-50/40 max-h-72 overflow-y-auto space-y-2">
+                {filteredPoolPlaces.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                    {filteredPoolPlaces.map((place) => {
+                      const scheduledDaysForPlace = getScheduledDaysForPlace(place);
+                      const isScheduled = scheduledDaysForPlace.length > 0;
+                      return (
+                        <div
+                          key={place.id}
+                          className={`p-2.5 rounded-xl border transition-all flex items-center justify-between gap-2 text-xs ${
+                            isScheduled
+                              ? "bg-white border-sky-300 shadow-xs ring-1 ring-sky-100"
+                              : "bg-white border-slate-200 shadow-xs hover:border-sky-300"
+                          }`}
+                        >
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-bold text-slate-800 truncate" dir="auto">
+                                {place.name}
+                              </span>
+                              {place.rating && (
+                                <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-1 rounded flex items-center gap-0.5 shrink-0">
+                                  ★ {place.rating}
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-1.5 text-[10px] text-slate-400 mt-0.5">
+                              <span className="text-sky-700 bg-sky-50 px-1 rounded font-semibold shrink-0">
+                                {categoryLabels[place.category] || place.category}
+                              </span>
+                              {place.location && (
+                                <span className="truncate max-w-[120px]" dir="auto">
+                                  {place.location}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* 1-Click Day Buttons (Admin only) with live Active indicator and Toggle */}
+                          {!isReadOnly && (
+                            <div className="flex items-center gap-1 shrink-0">
+                              <span className="text-[10px] text-slate-400 font-semibold hidden xs:inline">
+                                {isHe ? "שבץ ב:" : "Day:"}
+                              </span>
+                              {daysList.map((d) => {
+                                const isScheduledHere = scheduledDaysForPlace.includes(d);
+                                return (
+                                  <button
+                                    key={d}
+                                    type="button"
+                                    onClick={() => onQuickSchedulePlace(place, d)}
+                                    className={`px-1.5 py-0.5 rounded font-bold text-[10px] transition-all cursor-pointer whitespace-nowrap ${
+                                      isScheduledHere
+                                        ? "bg-sky-600 text-white shadow-xs"
+                                        : "bg-slate-100 hover:bg-sky-100 text-slate-600 hover:text-sky-800 border border-slate-200/60"
+                                    }`}
+                                    title={
+                                      isScheduledHere
+                                        ? (isHe ? `משובץ ביום ${d} - לחץ להסרה` : `Scheduled on Day ${d} - Click to remove`)
+                                        : (isHe ? `שבץ ביום ${d}` : `Assign to Day ${d}`)
+                                    }
+                                  >
+                                    {d}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-center py-6 text-xs text-slate-400 font-semibold">
+                    {isHe ? "אין מקומות שמורים בקטגוריה זו" : "No saved places in this category"}
+                  </div>
+                )}
               </div>
             </div>
           )}
