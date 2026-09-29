@@ -13,9 +13,11 @@ import {
   ArrowUp,
   ArrowDown
 } from "lucide-react";
+import { getDayDateInfo } from "../utils/dateUtils";
 
 export function ItineraryCardsView({
   items,
+  trip,
   places = [],
   destination = "",
   currencySymbol = "€",
