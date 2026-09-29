@@ -219,7 +219,7 @@ export function ItineraryTable({
                   </div>
 
                   {item.notes && (
-                    <p className="text-[11px] text-slate-600 bg-slate-50 p-1.5 rounded border border-slate-100 mt-1" dir="auto">
+                    <p className={`text-[11px] text-slate-600 bg-slate-50 p-1.5 rounded border border-slate-100 mt-1 ${isHe ? "text-right" : "text-left"}`} dir={isHe ? "rtl" : "ltr"}>
                       💡 {item.notes}
                     </p>
                   )}
