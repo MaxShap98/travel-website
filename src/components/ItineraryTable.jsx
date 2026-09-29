@@ -409,7 +409,7 @@ export function ItineraryTable({
                       <div className="flex items-center justify-center gap-1">
                         <button
                           disabled={index === 0}
-                          onClick={() => onMoveUp(index)}
+                          onClick={() => onMoveUp && onMoveUp(item.id)}
                           className={`p-1 rounded hover:bg-slate-100 transition-colors ${
                             index === 0 ? "opacity-20 cursor-not-allowed" : "text-slate-400 hover:text-slate-800 cursor-pointer"
                           }`}
@@ -420,7 +420,7 @@ export function ItineraryTable({
 
                         <button
                           disabled={index === items.length - 1}
-                          onClick={() => onMoveDown(index)}
+                          onClick={() => onMoveDown && onMoveDown(item.id)}
                           className={`p-1 rounded hover:bg-slate-100 transition-colors ${
                             index === items.length - 1
                               ? "opacity-20 cursor-not-allowed"
