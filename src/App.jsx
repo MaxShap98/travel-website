@@ -593,12 +593,48 @@ export default function App() {
     }
   };
 
-  // 3. Quick 1-Click Schedule Place to Day X
+  // 3. Quick 1-Click Schedule / Toggle Place to Day X
   const handleQuickScheduleToDay = (place, dayNumber) => {
+    if (isReadOnly) return;
+    const targetDay = parseInt(dayNumber, 10);
+    const placeNameClean = place.name ? place.name.trim().toLowerCase() : "";
+
+    // Check if place is already scheduled in this day
+    const isAlreadyScheduled = (currentTrip.itinerary || []).some(
+      (it) =>
+        it.dayNumber === targetDay &&
+        (it.linkedPlaceId === place.id ||
+          (it.activity && it.activity.trim().toLowerCase() === placeNameClean))
+    );
+
+    if (isAlreadyScheduled) {
+      // Toggle OFF: Remove from this day's itinerary
+      updateCurrentTrip((prev) => ({
+        ...prev,
+        itinerary: (prev.itinerary || []).filter(
+          (it) =>
+            !(
+              it.dayNumber === targetDay &&
+              (it.linkedPlaceId === place.id ||
+                (it.activity && it.activity.trim().toLowerCase() === placeNameClean))
+            )
+        )
+      }));
+
+      showToast({
+        type: "info",
+        message: isHe
+          ? `"${place.name}" הוסר מלו״ז יום ${targetDay}`
+          : `Removed "${place.name}" from Day ${targetDay} itinerary`
+      });
+      return;
+    }
+
+    // Toggle ON: Add to this day's itinerary
     const newActivity = {
       id: "itin-" + Date.now(),
-      dayNumber: parseInt(dayNumber),
-      dayLabel: isHe ? `יום ${dayNumber}` : `Day ${dayNumber}`,
+      dayNumber: targetDay,
+      dayLabel: isHe ? `יום ${targetDay}` : `Day ${targetDay}`,
       period: "Morning",
       time: "",
       activity: place.name,
@@ -619,8 +655,8 @@ export default function App() {
     showToast({
       type: "success",
       message: isHe
-        ? `"${place.name}" שובץ ביום ${dayNumber} בלו״ז!`
-        : `Added "${place.name}" to Day ${dayNumber}!`
+        ? `"${place.name}" שובץ ביום ${targetDay} בלו״ז!`
+        : `Added "${place.name}" to Day ${targetDay}!`
     });
   };
 
