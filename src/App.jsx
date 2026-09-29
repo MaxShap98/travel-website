@@ -684,10 +684,20 @@ export default function App() {
       completed: false
     };
 
-    updateCurrentTrip((prev) => ({
-      ...prev,
-      itinerary: [...(prev.itinerary || []), newActivity]
-    }));
+    updateCurrentTrip((prev) => {
+      const cleanPrev = (prev.itinerary || []).filter(
+        (it) =>
+          !(
+            it.dayNumber === targetDay &&
+            (it.linkedPlaceId === place.id ||
+              (it.activity && it.activity.trim().toLowerCase() === placeNameClean))
+          )
+      );
+      return {
+        ...prev,
+        itinerary: [...cleanPrev, newActivity]
+      };
+    });
 
     showToast({
       type: "success",
