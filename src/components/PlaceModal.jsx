@@ -19,7 +19,7 @@ export function PlaceModal({
   const [name, setName] = useState("");
   const [category, setCategory] = useState("dining");
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("Must Visit");
+  const [status, setStatus] = useState("Unset");
   const [priceRange, setPriceRange] = useState("$$");
   const [rating, setRating] = useState("4.8");
   const [cost, setCost] = useState(50);
@@ -48,7 +48,7 @@ export function PlaceModal({
       setName(placeToEdit.name || "");
       setCategory(placeToEdit.category || "dining");
       setDescription(placeToEdit.description || "");
-      setStatus(placeToEdit.status || "Must Visit");
+      setStatus(placeToEdit.status || "Unset");
       setPriceRange(placeToEdit.priceRange || "$$");
       setRating(placeToEdit.rating ? placeToEdit.rating.toString() : "4.8");
       setCost(placeToEdit.cost || 0);
