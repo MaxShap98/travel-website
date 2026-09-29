@@ -291,16 +291,16 @@ export function ItineraryTable({
 
       {/* 💻 DESKTOP TABLE VIEW (>= md screens) */}
       <div className="hidden md:block overflow-x-auto">
-        <table className="w-full text-left border-collapse" dir={isHe ? "rtl" : "ltr"}>
+        <table className={`w-full border-collapse ${isHe ? "text-right" : "text-left"}`} dir={isHe ? "rtl" : "ltr"}>
           <thead>
             <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
               <th className="py-2.5 px-3 w-12 text-center">{isHe ? "בוצע" : "Done"}</th>
-              <th className="py-2.5 px-3 w-28">{isHe ? "יום" : "Day"}</th>
-              <th className="py-2.5 px-3 w-28">{isHe ? "זמן" : "Period"}</th>
-              <th className="py-2.5 px-4">{isHe ? "פעילות / מקום" : "Activity / Place"}</th>
-              <th className="py-2.5 px-4">{isHe ? "כתובת / קישור" : "Location"}</th>
-              <th className="py-2.5 px-3 w-28">{isHe ? "עלות / סטטוס" : "Cost"}</th>
-              <th className="py-2.5 px-4 min-w-[180px]">{isHe ? "הערות" : "Notes"}</th>
+              <th className={`py-2.5 px-3 w-28 ${isHe ? "text-right" : "text-left"}`}>{isHe ? "יום" : "Day"}</th>
+              <th className={`py-2.5 px-3 w-28 ${isHe ? "text-right" : "text-left"}`}>{isHe ? "זמן" : "Period"}</th>
+              <th className={`py-2.5 px-4 ${isHe ? "text-right" : "text-left"}`}>{isHe ? "פעילות / מקום" : "Activity / Place"}</th>
+              <th className={`py-2.5 px-4 ${isHe ? "text-right" : "text-left"}`}>{isHe ? "כתובת / קישור" : "Location"}</th>
+              <th className={`py-2.5 px-3 w-28 ${isHe ? "text-right" : "text-left"}`}>{isHe ? "עלות / סטטוס" : "Cost"}</th>
+              <th className={`py-2.5 px-4 min-w-[180px] ${isHe ? "text-right" : "text-left"}`}>{isHe ? "הערות" : "Notes"}</th>
               {!isReadOnly && (
                 <th className="py-2.5 px-3 w-24 text-center no-print">{isHe ? "פעולות" : "Actions"}</th>
               )}
